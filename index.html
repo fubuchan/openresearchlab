@@ -253,25 +253,26 @@
       const birdW = 36;
       const birdH = 28;
 
-      // 画面左外から飛んでくる開始位置
-      const startX = -wrapRect.left - birdW - 20;
-      const startY = landY - 60; // 少し上から降りてくる
+      // 画面上部から降りてくる開始位置
+      const startX = landX - birdW / 2 + 40; // 着地点より少し右から弧を描く
+      const startY = -wrapRect.top - birdH - 20; // 画面上端の外
 
       birdWrap.style.left = startX + 'px';
       birdWrap.style.top  = startY + 'px';
       birdWrap.style.opacity = '1';
 
-      // 飛行フェーズ：左外→着地点
-      const duration = 1400; // ms
+      // 飛行フェーズ：上外→着地点
+      const duration = 3200; // ms（ゆっくり）
       const startTime = performance.now();
 
       function flyTo(now) {
         const t = Math.min((now - startTime) / duration, 1);
-        // イーズアウト
-        const ease = 1 - Math.pow(1 - t, 3);
+        // イーズアウト（終盤ゆっくり）
+        const ease = 1 - Math.pow(1 - t, 2.5);
+        // 横は緩やかな弧
         const x = startX + (landX - birdW / 2 - startX) * ease;
-        // 放物線で降りてくる
-        const y = startY + (landY - birdH - startY) * ease - Math.sin(Math.PI * t) * 30;
+        // 縦は上から降りてくる
+        const y = startY + (landY - birdH - startY) * ease + Math.sin(Math.PI * t * 0.8) * 20;
         birdWrap.style.left = x + 'px';
         birdWrap.style.top  = y + 'px';
 
