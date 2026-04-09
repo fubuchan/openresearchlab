@@ -177,7 +177,7 @@
     <img class="logo-img" src="logo.png" alt="Open Research Lab.">
     <!-- 鳥 -->
     <div id="bird-wrap">
-      <svg id="bird-svg" width="36" height="28" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <svg id="bird-svg" width="56" height="44" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- 胴体 -->
         <ellipse id="body" cx="8" cy="11" rx="3" ry="2" fill="#0a0a0a"/>
         <!-- 尾 -->
@@ -246,12 +246,12 @@
       const logoRightX = logoRect.right - wrapRect.left;
 
       // 鳥はロゴの横幅の約30%あたりから止まる（右寄り）
-      const landX = logoRightX * 0.6;
+      const landX = logoRightX * 0.25;
       const landY = logoTopY; // ロゴ上端
 
       // 鳥のSVGサイズ（表示サイズ）
-      const birdW = 36;
-      const birdH = 28;
+      const birdW = 56;
+      const birdH = 44;
 
       // 開始位置：画面上部の真ん中（logo-wrap基準に変換）
       const screenCenterX = window.innerWidth / 2 - wrapRect.left;
