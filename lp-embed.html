@@ -134,26 +134,41 @@
     backface-visibility:hidden;
   }
   .page-front {
-    background: linear-gradient(to right, #e8e8e4, #f5f5f2);
-    border-left:1px solid rgba(10,10,10,0.08);
+    background: #f5f5f2;
+    border-left: 1px solid rgba(10,10,10,0.1);
+    overflow: hidden;
   }
   .page-back {
-    background: #f0f0ec;
-    transform:rotateY(180deg);
-    border-right:1px solid rgba(10,10,10,0.08);
+    background: #f5f5f2;
+    transform: rotateY(180deg);
+    border-right: 1px solid rgba(10,10,10,0.1);
+    overflow: hidden;
   }
-  /* ページに印刷されたライン */
+  /* ロゴのストライプパターン：太い2本＋細い6本 */
   .page-front::after, .page-back::after {
-    content:'';
-    position:absolute; top:15%; left:10%; right:10%;
-    height:70%;
-    background: repeating-linear-gradient(
-      to bottom,
-      transparent,
-      transparent 10px,
-      rgba(10,10,10,0.06) 10px,
-      rgba(10,10,10,0.06) 11px
-    );
+    content: '';
+    position: absolute;
+    top: 12%; left: 0; right: 0;
+    height: 50%;
+    background:
+      linear-gradient(to bottom,
+        #0a0a0a 0px,   #0a0a0a 3px,
+        transparent 3px, transparent 8px,
+        #0a0a0a 8px,   #0a0a0a 11px,
+        transparent 11px, transparent 16px,
+        #0a0a0a 16px,  #0a0a0a 17.5px,
+        transparent 17.5px, transparent 21px,
+        #0a0a0a 21px,  #0a0a0a 22.5px,
+        transparent 22.5px, transparent 26px,
+        #0a0a0a 26px,  #0a0a0a 27.5px,
+        transparent 27.5px, transparent 31px,
+        #0a0a0a 31px,  #0a0a0a 32.5px,
+        transparent 32.5px, transparent 36px,
+        #0a0a0a 36px,  #0a0a0a 37.5px,
+        transparent 37.5px, transparent 41px,
+        #0a0a0a 41px,  #0a0a0a 42.5px,
+        transparent 42.5px
+      );
   }
 
   /* ===== ③ コード ===== */
@@ -170,12 +185,12 @@
   }
   #lp-code .meta-top { top:44px; right:44px; text-align:right; }
 
-  /* コードエディタ */
+  /* コードエディタ：ロゴ真下 */
   #code-editor {
     position:absolute;
-    top:50%; right:6vw;
-    transform:translateY(-50%);
-    width:min(36vw,380px);
+    left: min(-4vw,-40px);
+    top: calc(35vh + var(--logo-height, 120px) + 16px);
+    width:min(52vw,560px);
     font-family:'Share Tech Mono',monospace;
     font-size:clamp(9px,1vw,12px);
     color:var(--black);
@@ -190,17 +205,23 @@
   #code-editor .str { opacity:0.6; }
   #code-editor .cm  { opacity:0.3; }
 
-  /* SVG描画エリア */
+  /* SVG描画エリア：画面いっぱいの店舗ファサード */
   #code-drawing {
     position:absolute;
-    bottom:15vh; right:6vw;
-    width:min(20vw,200px);
+    inset: 0;
     opacity:0;
-    transition:opacity 0.8s ease;
+    transition:opacity 0.6s ease;
+    pointer-events:none;
   }
-  #code-drawing svg path, #code-drawing svg line, #code-drawing svg rect {
-    stroke-dasharray:1000;
-    stroke-dashoffset:1000;
+  #code-drawing svg {
+    width:100%; height:100%;
+  }
+  #code-drawing svg path,
+  #code-drawing svg line,
+  #code-drawing svg rect,
+  #code-drawing svg polyline {
+    stroke-dasharray: 2000;
+    stroke-dashoffset: 2000;
   }
 </style>
 </head>
@@ -257,16 +278,36 @@
   <div class="meta meta-top">$ open research_lab --mode=public<span class="cursor"></span></div>
   <!-- コードエディタ -->
   <div id="code-editor"></div>
-  <!-- 描画SVG -->
+  <!-- 描画SVG：店舗ファサード -->
   <div id="code-drawing">
-    <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- ロゴのフレームをコードで描く -->
-      <rect id="dr-frame" x="2" y="2" width="80" height="50" stroke="#0a0a0a" stroke-width="2.5" fill="none"/>
-      <line id="dr-l1" x1="2"  y1="10" x2="82" y2="10" stroke="#0a0a0a" stroke-width="1.5"/>
-      <line id="dr-l2" x1="2"  y1="16" x2="82" y2="16" stroke="#0a0a0a" stroke-width="0.8"/>
-      <line id="dr-l3" x1="2"  y1="20" x2="82" y2="20" stroke="#0a0a0a" stroke-width="0.8"/>
-      <line id="dr-l4" x1="2"  y1="24" x2="82" y2="24" stroke="#0a0a0a" stroke-width="0.8"/>
-      <line id="dr-l5" x1="2"  y1="28" x2="82" y2="28" stroke="#0a0a0a" stroke-width="0.8"/>
+    <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 地面 -->
+      <line id="sf-ground" x1="0" y1="115" x2="200" y2="115" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- 建物外壁 -->
+      <rect id="sf-wall" x="20" y="20" width="160" height="95" stroke="#0a0a0a" stroke-width="1.5" fill="none"/>
+      <!-- 屋根ライン -->
+      <line id="sf-roof" x1="10" y1="20" x2="190" y2="20" stroke="#0a0a0a" stroke-width="2"/>
+      <!-- 看板エリア -->
+      <rect id="sf-sign" x="50" y="28" width="100" height="22" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+      <!-- 看板テキスト代替ライン -->
+      <line id="sf-st1" x1="60" y1="36" x2="140" y2="36" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line id="sf-st2" x1="60" y1="42" x2="120" y2="42" stroke="#0a0a0a" stroke-width="0.7"/>
+      <!-- ショーウィンドウ左 -->
+      <rect id="sf-wl" x="28" y="60" width="50" height="55" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+      <!-- ショーウィンドウ右 -->
+      <rect id="sf-wr" x="90" y="60" width="50" height="55" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+      <!-- ドア -->
+      <rect id="sf-door" x="152" y="78" width="22" height="37" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+      <!-- ドアノブ -->
+      <line id="sf-knob" x1="153" y1="97" x2="156" y2="97" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ウィンドウ内の本棚ライン（左） -->
+      <line id="sf-bl1" x1="30" y1="80" x2="76" y2="80" stroke="#0a0a0a" stroke-width="0.6"/>
+      <line id="sf-bl2" x1="30" y1="90" x2="76" y2="90" stroke="#0a0a0a" stroke-width="0.6"/>
+      <line id="sf-bl3" x1="30" y1="100" x2="76" y2="100" stroke="#0a0a0a" stroke-width="0.6"/>
+      <!-- ウィンドウ内の本棚ライン（右） -->
+      <line id="sf-br1" x1="92" y1="80" x2="138" y2="80" stroke="#0a0a0a" stroke-width="0.6"/>
+      <line id="sf-br2" x1="92" y1="90" x2="138" y2="90" stroke="#0a0a0a" stroke-width="0.6"/>
+      <line id="sf-br3" x1="92" y1="100" x2="138" y2="100" stroke="#0a0a0a" stroke-width="0.6"/>
     </svg>
   </div>
   <nav class="nav">
@@ -360,15 +401,11 @@
         page.style.height = logoH + 'px';
         page.style.zIndex = pageCount - i;
         // 少しずつ色を変える
-        const lightness = 245 - i * 4;
-
         const front = document.createElement('div');
         front.className = 'page-front';
-        front.style.background = `rgb(${lightness},${lightness},${lightness - 2})`;
 
         const back = document.createElement('div');
         back.className = 'page-back';
-        back.style.background = `rgb(${lightness - 6},${lightness - 6},${lightness - 8})`;
 
         page.appendChild(front);
         page.appendChild(back);
@@ -423,6 +460,8 @@
     ];
 
     logoImg.addEventListener('animationend', () => {
+      // ロゴの高さをCSS変数に渡してエディタ位置を決定
+      document.documentElement.style.setProperty('--logo-height', logoImg.offsetHeight + 'px');
       editor.style.opacity = '1';
 
       let lineIdx = 0;
@@ -476,15 +515,18 @@
 
     function startDrawing() {
       drawing.style.opacity = '1';
-      const strokes = drawing.querySelectorAll('path, line, rect');
+      const strokes = drawing.querySelectorAll('rect, line, path, polyline');
       strokes.forEach((el, i) => {
-        const len = el.getTotalLength ? el.getTotalLength() : 200;
+        let len = 2000;
+        try { len = el.getTotalLength(); } catch(e) {}
         el.style.strokeDasharray  = len;
         el.style.strokeDashoffset = len;
-        el.style.transition = `stroke-dashoffset ${0.6 + i * 0.15}s ease ${i * 0.2}s`;
-        requestAnimationFrame(() => {
+        const dur = 0.5 + i * 0.08;
+        const delay = i * 0.12;
+        el.style.transition = `stroke-dashoffset ${dur}s ease ${delay}s`;
+        requestAnimationFrame(() => requestAnimationFrame(() => {
           el.style.strokeDashoffset = '0';
-        });
+        }));
       });
     }
   }
