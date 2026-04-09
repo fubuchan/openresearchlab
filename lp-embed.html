@@ -9,273 +9,273 @@
 
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-  :root {
-    --black: #0a0a0a;
-    --white: #f5f5f2;
-  }
+  :root { --black: #0a0a0a; --white: #f5f5f2; }
 
   html, body {
-    width: 100%; height: 100%;
-    overflow: hidden;
-    background: var(--white);
-    font-family: 'Share Tech Mono', monospace;
+    width:100%; height:100%;
+    overflow:hidden;
+    background:var(--white);
+    font-family:'Share Tech Mono', monospace;
   }
 
   .lp {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-start;
-    opacity: 0;
-    pointer-events: none;
+    position:absolute; inset:0;
+    display:flex; align-items:flex-start;
+    opacity:0; pointer-events:none;
   }
+  .lp.active { opacity:1; pointer-events:all; }
 
-  .lp.active {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* ロゴ画像 */
   .logo-img {
-    display: block;
-    width: min(52vw, 560px);
-    height: auto;
-    flex-shrink: 0;
-    opacity: 0;
+    display:block;
+    width:min(52vw,560px); height:auto;
+    flex-shrink:0; opacity:0;
   }
 
-  /* メタテキスト */
   .meta {
-    position: absolute;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: clamp(9px, 0.9vw, 11px);
-    color: var(--black);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    opacity: 0;
+    position:absolute;
+    font-family:'Share Tech Mono',monospace;
+    font-size:clamp(9px,0.9vw,11px);
+    color:var(--black);
+    letter-spacing:0.18em; text-transform:uppercase;
+    opacity:0;
   }
-
   .lp.active .meta {
-    animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
+    animation:fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
   }
-
   @keyframes fadeUp {
-    from { opacity:0; transform: translateY(8px); }
-    to   { opacity:0.38; transform: translateY(0); }
+    from{opacity:0;transform:translateY(8px);}
+    to{opacity:0.38;transform:translateY(0);}
   }
 
-  /* カーソル */
   .cursor {
-    display: inline-block;
-    width: 0.55em; height: 0.9em;
-    background: var(--black);
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-    margin-left: 2px;
+    display:inline-block; width:0.55em; height:0.9em;
+    background:var(--black); vertical-align:text-bottom;
+    animation:blink 1s step-end infinite; margin-left:2px;
   }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+  /* ナビゲーション */
+  .nav {
+    position:absolute; bottom:44px; left:44px;
+    display:flex; flex-direction:column; gap:8px; z-index:10;
+  }
+  .nav a {
+    font-family:'Share Tech Mono',monospace;
+    font-size:clamp(9px,0.9vw,11px);
+    letter-spacing:0.18em; text-transform:uppercase;
+    color:var(--black); text-decoration:none;
+    opacity:0; transition:opacity 0.2s ease;
+  }
+  .nav a:hover { opacity:1 !important; }
+  .lp.active .nav a { animation:fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards; }
+  .lp.active .nav a:nth-child(1){animation-delay:0.5s;}
+  .lp.active .nav a:nth-child(2){animation-delay:0.6s;}
+  .lp.active .nav a:nth-child(3){animation-delay:0.7s;}
+  .lp.active .nav a:nth-child(4){animation-delay:0.8s;}
 
   /* ===== ① 看板 ===== */
-  #lp-sign { justify-content: flex-end; }
+  #lp-sign { justify-content:flex-end; }
   #lp-sign .logo-wrap {
-    position: relative;
-    flex-shrink: 0;
-    margin-right: min(-4vw, -40px);
-    margin-top: 35vh;
+    position:relative; flex-shrink:0;
+    margin-right:min(-4vw,-40px); margin-top:35vh;
   }
-  #lp-sign .logo-img {
-    margin-right: 0;
-    margin-top: 0;
-  }
+  #lp-sign .logo-img { margin:0; }
   #lp-sign.active .logo-img {
-    animation: fromRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
+    animation:fromRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
   }
   @keyframes fromRight {
-    from { opacity:0; transform: translateX(40px); }
-    to   { opacity:1; transform: translateX(0); }
+    from{opacity:0;transform:translateX(40px);}
+    to{opacity:1;transform:translateX(0);}
   }
   #lp-sign .meta-top { top:44px; left:44px; }
-  #lp-sign .meta-bot { bottom:44px; left:44px; }
 
-  /* 鳥のコンテナ */
-  #bird-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    pointer-events: none;
-  }
-
-  /* 鳥SVGのラッパー：飛んでくる動き */
-  #bird-wrap {
-    position: absolute;
-    opacity: 0;
-  }
-
-  /* 羽ばたき：付け根を軸にrotateで開閉 */
+  /* 鳥 */
+  #bird-wrap { position:absolute; opacity:0; }
   @keyframes flapLeft {
-    0%   { transform: rotate(-35deg); }
-    50%  { transform: rotate(20deg);  }
-    100% { transform: rotate(-35deg); }
+    0%{transform:rotate(-35deg);}50%{transform:rotate(20deg);}100%{transform:rotate(-35deg);}
   }
   @keyframes flapRight {
-    0%   { transform: rotate(35deg);  }
-    50%  { transform: rotate(-20deg); }
-    100% { transform: rotate(35deg);  }
+    0%{transform:rotate(35deg);}50%{transform:rotate(-20deg);}100%{transform:rotate(35deg);}
   }
-
-  .wing-left  {
-    transform-origin: 8px 10px;
-    animation: flapLeft 0.35s ease-in-out infinite;
-  }
-  .wing-right {
-    transform-origin: 8px 10px;
-    animation: flapRight 0.35s ease-in-out infinite;
-  }
-
-  /* 止まった後の首振り */
+  .wing-left  { transform-origin:8px 10px; animation:flapLeft  0.35s ease-in-out infinite; }
+  .wing-right { transform-origin:8px 10px; animation:flapRight 0.35s ease-in-out infinite; }
   @keyframes headTilt {
-    0%   { transform: rotate(0deg);   }
-    25%  { transform: rotate(15deg);  }
-    50%  { transform: rotate(0deg);   }
-    75%  { transform: rotate(-12deg); }
-    100% { transform: rotate(0deg);   }
+    0%{transform:rotate(0deg);}25%{transform:rotate(15deg);}
+    50%{transform:rotate(0deg);}75%{transform:rotate(-12deg);}100%{transform:rotate(0deg);}
   }
 
   /* ===== ② 本 ===== */
-  #lp-book { justify-content: center; }
-  #lp-book .logo-img {
-    margin-top: 35vh;
+  #lp-book { justify-content:center; }
+  #lp-book .book-wrap {
+    position:relative; flex-shrink:0;
+    margin-top:35vh;
+    perspective:800px;
   }
+  #lp-book .logo-img { display:block; }
   #lp-book.active .logo-img {
-    animation: fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
+    animation:fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
   }
   @keyframes fromBelow {
-    from { opacity:0; transform: translateY(20px); }
-    to   { opacity:1; transform: translateY(0); }
+    from{opacity:0;transform:translateY(20px);}
+    to{opacity:1;transform:translateY(0);}
   }
   #lp-book .meta-top { top:44px; left:50%; transform:translateX(-50%); }
-  #lp-book .meta-bot { bottom:44px; left:50%; transform:translateX(-50%); text-align:center; }
+
+  /* ページめくり */
+  .page {
+    position:absolute; top:0; left:50%;
+    width:50%; height:100%;
+    transform-origin:left center;
+    transform-style:preserve-3d;
+    pointer-events:none;
+  }
+  .page-front, .page-back {
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+  }
+  .page-front {
+    background: linear-gradient(to right, #e8e8e4, #f5f5f2);
+    border-left:1px solid rgba(10,10,10,0.08);
+  }
+  .page-back {
+    background: #f0f0ec;
+    transform:rotateY(180deg);
+    border-right:1px solid rgba(10,10,10,0.08);
+  }
+  /* ページに印刷されたライン */
+  .page-front::after, .page-back::after {
+    content:'';
+    position:absolute; top:15%; left:10%; right:10%;
+    height:70%;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 10px,
+      rgba(10,10,10,0.06) 10px,
+      rgba(10,10,10,0.06) 11px
+    );
+  }
 
   /* ===== ③ コード ===== */
-  #lp-code { justify-content: flex-start; }
+  #lp-code { justify-content:flex-start; }
   #lp-code .logo-img {
-    margin-left: min(-4vw, -40px);
-    margin-top: 35vh;
+    margin-left:min(-4vw,-40px); margin-top:35vh;
   }
   #lp-code.active .logo-img {
-    animation: fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
+    animation:fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
   }
   @keyframes fromLeft {
-    from { opacity:0; transform: translateX(-40px); }
-    to   { opacity:1; transform: translateX(0); }
+    from{opacity:0;transform:translateX(-40px);}
+    to{opacity:1;transform:translateX(0);}
   }
   #lp-code .meta-top { top:44px; right:44px; text-align:right; }
-  #lp-code .meta-bot { bottom:44px; right:44px; text-align:right; }
 
-
-
-  /* ナビゲーション */
-  #nav {
-    position: absolute;
-    bottom: 44px;
-    left: 44px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    z-index: 10;
+  /* コードエディタ */
+  #code-editor {
+    position:absolute;
+    top:50%; right:6vw;
+    transform:translateY(-50%);
+    width:min(36vw,380px);
+    font-family:'Share Tech Mono',monospace;
+    font-size:clamp(9px,1vw,12px);
+    color:var(--black);
+    opacity:0;
+    line-height:1.7;
   }
+  #code-editor .line { display:flex; gap:12px; }
+  #code-editor .ln { opacity:0.25; user-select:none; min-width:16px; text-align:right; }
+  #code-editor .code-text { white-space:pre; }
+  #code-editor .kw  { opacity:0.5; }
+  #code-editor .fn  { opacity:0.85; }
+  #code-editor .str { opacity:0.6; }
+  #code-editor .cm  { opacity:0.3; }
 
-  #nav a {
-    font-family: 'Share Tech Mono', monospace;
-    font-size: clamp(9px, 0.9vw, 11px);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--black);
-    text-decoration: none;
-    opacity: 0;
-    transition: opacity 0.2s ease;
+  /* SVG描画エリア */
+  #code-drawing {
+    position:absolute;
+    bottom:15vh; right:6vw;
+    width:min(20vw,200px);
+    opacity:0;
+    transition:opacity 0.8s ease;
   }
-
-  #nav a:hover {
-    opacity: 1 !important;
+  #code-drawing svg path, #code-drawing svg line, #code-drawing svg rect {
+    stroke-dasharray:1000;
+    stroke-dashoffset:1000;
   }
-
-  .lp.active #nav a {
-    animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
-  }
-
-  .lp.active #nav a:nth-child(1) { animation-delay: 0.5s; }
-  .lp.active #nav a:nth-child(2) { animation-delay: 0.6s; }
-  .lp.active #nav a:nth-child(3) { animation-delay: 0.7s; }
-  .lp.active #nav a:nth-child(4) { animation-delay: 0.8s; }
-
 </style>
 </head>
 <body>
 
-<!-- スクロールコンテナ -->
-<!-- ファーストビュー（100vh） -->
 <!-- ① 看板 -->
 <div class="lp" id="lp-sign">
   <div class="logo-wrap">
     <img class="logo-img" src="logo.png" alt="Open Research Lab.">
-    <!-- 鳥 -->
     <div id="bird-wrap">
-      <svg id="bird-svg" width="56" height="44" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- 胴体 -->
-        <ellipse id="body" cx="8" cy="11" rx="3" ry="2" fill="#0a0a0a"/>
-        <!-- 尾 -->
+      <svg id="bird-svg" width="56" height="44" viewBox="0 0 16 16" fill="none">
+        <ellipse cx="8" cy="11" rx="3" ry="2" fill="#0a0a0a"/>
         <polygon points="5,12 3,14 5,13" fill="#0a0a0a"/>
-        <!-- 左羽：付け根(8,10)を軸に回転する塗り面 -->
-        <path class="wing-left" d="M8,10 Q5,8 2,9 Q4,11 8,10 Z" fill="#0a0a0a"/>
-        <!-- 右羽：付け根(8,10)を軸に回転する塗り面 -->
+        <path class="wing-left"  d="M8,10 Q5,8 2,9 Q4,11 8,10 Z" fill="#0a0a0a"/>
         <path class="wing-right" d="M8,10 Q11,8 14,9 Q12,11 8,10 Z" fill="#0a0a0a"/>
-        <!-- 頭 -->
         <g id="bird-head">
           <circle cx="10.5" cy="8.5" r="2" fill="#0a0a0a"/>
-          <!-- くちばし -->
           <polygon points="12.5,8 14.5,8.5 12.5,9" fill="#0a0a0a"/>
-
         </g>
-        <!-- 足 -->
-        <line x1="7.5" y1="13" x2="7" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-        <line x1="8.5" y1="13" x2="9" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-        <line x1="7"  y1="15" x2="6" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-        <line x1="9"  y1="15" x2="10" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="7.5" y1="13" x2="7"  y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="8.5" y1="13" x2="9"  y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="7"   y1="15" x2="6"  y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="9"   y1="15" x2="10" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
       </svg>
     </div>
   </div>
   <div class="meta meta-top">Open Research Lab. — Est. 2025</div>
-
-<!-- ナビゲーション -->
-<nav id="nav">
-  <a href="#">Publication</a>
-  <a href="#">About</a>
-  <a href="#">Members</a>
-  <a href="#">Action</a>
-</nav>
+  <nav class="nav">
+    <a href="#">Publication</a>
+    <a href="#">About</a>
+    <a href="#">Members</a>
+    <a href="#">Action</a>
+  </nav>
 </div>
 
 <!-- ② 本 -->
 <div class="lp" id="lp-book">
-  <img class="logo-img" src="logo.png" alt="Open Research Lab.">
+  <div class="book-wrap">
+    <img class="logo-img" src="logo.png" alt="Open Research Lab." id="book-logo">
+    <!-- ページめくりレイヤー（JS で生成） -->
+  </div>
   <div class="meta meta-top">Vol. ∞</div>
-
-<!-- ナビゲーション -->
-<nav id="nav">
-  <a href="#">Publication</a>
-  <a href="#">About</a>
-  <a href="#">Members</a>
-  <a href="#">Action</a>
-</nav>
+  <nav class="nav">
+    <a href="#">Publication</a>
+    <a href="#">About</a>
+    <a href="#">Members</a>
+    <a href="#">Action</a>
+  </nav>
 </div>
 
 <!-- ③ コーディングソフト -->
 <div class="lp" id="lp-code">
   <img class="logo-img" src="logo.png" alt="Open Research Lab.">
   <div class="meta meta-top">$ open research_lab --mode=public<span class="cursor"></span></div>
-
+  <!-- コードエディタ -->
+  <div id="code-editor"></div>
+  <!-- 描画SVG -->
+  <div id="code-drawing">
+    <svg viewBox="0 0 100 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- ロゴのフレームをコードで描く -->
+      <rect id="dr-frame" x="2" y="2" width="80" height="50" stroke="#0a0a0a" stroke-width="2.5" fill="none"/>
+      <line id="dr-l1" x1="2"  y1="10" x2="82" y2="10" stroke="#0a0a0a" stroke-width="1.5"/>
+      <line id="dr-l2" x1="2"  y1="16" x2="82" y2="16" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line id="dr-l3" x1="2"  y1="20" x2="82" y2="20" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line id="dr-l4" x1="2"  y1="24" x2="82" y2="24" stroke="#0a0a0a" stroke-width="0.8"/>
+      <line id="dr-l5" x1="2"  y1="28" x2="82" y2="28" stroke="#0a0a0a" stroke-width="0.8"/>
+    </svg>
+  </div>
+  <nav class="nav">
+    <a href="#">Publication</a>
+    <a href="#">About</a>
+    <a href="#">Members</a>
+    <a href="#">Action</a>
+  </nav>
+</div>
 
 <script>
   // ランダムLP選択
@@ -283,43 +283,27 @@
   const chosen = lps[Math.floor(Math.random() * lps.length)];
   document.getElementById(chosen).classList.add('active');
 
-  // 看板LPの場合のみ鳥アニメーション
+  /* ===== ① 看板：鳥 ===== */
   if (chosen === 'lp-sign') {
     const logoImg  = document.querySelector('#lp-sign .logo-img');
     const birdWrap = document.getElementById('bird-wrap');
-    const birdSvg  = document.getElementById('bird-svg');
     const birdHead = document.getElementById('bird-head');
     const wingL    = document.querySelector('.wing-left');
     const wingR    = document.querySelector('.wing-right');
 
     logoImg.addEventListener('animationend', () => {
-      // ロゴの実サイズを取得してロゴ上端にスナップ
       const logoRect = logoImg.getBoundingClientRect();
       const wrapRect = logoImg.closest('.logo-wrap').getBoundingClientRect();
-
-      // ロゴ上端の相対Y（logo-wrap基準）
-      const logoTopY = logoRect.top - wrapRect.top;
-      // ロゴ右端の相対X（logo-wrap基準）
+      const logoTopY   = logoRect.top  - wrapRect.top;
       const logoRightX = logoRect.right - wrapRect.left;
-
-      // 鳥はロゴの横幅の約30%あたりから止まる（右寄り）
       const landX = logoRightX * 0.25;
-      const landY = logoTopY; // ロゴ上端
-
-      // 鳥のSVGサイズ（表示サイズ）
-      const birdW = 56;
-      const birdH = 44;
-
-      // 開始位置：画面上部の真ん中（logo-wrap基準に変換）
+      const landY = logoTopY;
+      const birdW = 56, birdH = 44;
       const screenCenterX = window.innerWidth / 2 - wrapRect.left;
       const startX = screenCenterX;
       const startY = -wrapRect.top - birdH - 20;
-
-      // 着地点
       const endX = landX - birdW / 2;
       const endY = landY - birdH;
-
-      // 弧の制御点
       const cpX = (startX + endX) / 2 + (endX - startX) * 0.3;
       const cpY = (startY + endY) / 2 - 80;
 
@@ -327,51 +311,183 @@
       birdWrap.style.top  = startY + 'px';
       birdWrap.style.opacity = '1';
 
-      // 飛行フェーズ：二次ベジェ曲線
       const duration = 3200;
       const startTime = performance.now();
 
       function flyTo(now) {
         const t = Math.min((now - startTime) / duration, 1);
-        const ease = 1 - Math.pow(1 - t, 2.5);
-        const e = ease;
+        const e = 1 - Math.pow(1 - t, 2.5);
         const x = Math.pow(1-e,2)*startX + 2*(1-e)*e*cpX + Math.pow(e,2)*endX;
         const y = Math.pow(1-e,2)*startY + 2*(1-e)*e*cpY + Math.pow(e,2)*endY;
         birdWrap.style.left = x + 'px';
         birdWrap.style.top  = y + 'px';
-
         if (t < 1) {
           requestAnimationFrame(flyTo);
         } else {
-          // 着地：羽ばたき停止
           wingL.style.animation = 'none';
           wingR.style.animation = 'none';
-          // 羽を閉じた形に
           wingL.setAttribute('d', 'M8,10 Q6,10 6,11 Q7,11 8,10 Z');
           wingR.setAttribute('d', 'M8,10 Q10,10 10,11 Q9,11 8,10 Z');
-
-          // 少し待ってから首振り開始
           setTimeout(() => {
             birdHead.style.transformOrigin = '10.5px 8.5px';
             birdHead.style.animation = 'headTilt 1.8s ease-in-out infinite';
           }, 400);
         }
       }
-
       requestAnimationFrame(flyTo);
     }, { once: true });
   }
 
-  // ステートメントのフェードイン
-  const statementInner = document.querySelector('.statement-inner');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        statementInner.classList.add('visible');
+  /* ===== ② 本：ページめくり ===== */
+  if (chosen === 'lp-book') {
+    const bookLogo = document.getElementById('book-logo');
+    const bookWrap = document.querySelector('#lp-book .book-wrap');
+
+    bookLogo.addEventListener('animationend', () => {
+      const logoW = bookLogo.offsetWidth;
+      const logoH = bookLogo.offsetHeight;
+      bookWrap.style.width  = logoW + 'px';
+      bookWrap.style.height = logoH + 'px';
+
+      // ページを3枚作ってタイミングをずらしてめくる
+      const pageCount = 4;
+      const pages = [];
+
+      for (let i = 0; i < pageCount; i++) {
+        const page = document.createElement('div');
+        page.className = 'page';
+        page.style.width = (logoW / 2) + 'px';
+        page.style.height = logoH + 'px';
+        page.style.zIndex = pageCount - i;
+        // 少しずつ色を変える
+        const lightness = 245 - i * 4;
+
+        const front = document.createElement('div');
+        front.className = 'page-front';
+        front.style.background = `rgb(${lightness},${lightness},${lightness - 2})`;
+
+        const back = document.createElement('div');
+        back.className = 'page-back';
+        back.style.background = `rgb(${lightness - 6},${lightness - 6},${lightness - 8})`;
+
+        page.appendChild(front);
+        page.appendChild(back);
+        bookWrap.appendChild(page);
+        pages.push(page);
       }
-    });
-  }, { threshold: 0.2 });
-  observer.observe(statementInner);
+
+      // 順番にめくる
+      pages.forEach((page, i) => {
+        setTimeout(() => {
+          const delay = 600;
+          const dur   = 900;
+          const start = performance.now();
+
+          function flip(now) {
+            const t = Math.min((now - start) / dur, 1);
+            const ease = t < 0.5
+              ? 4 * t * t * t
+              : 1 - Math.pow(-2 * t + 2, 3) / 2;
+            const angle = ease * -180;
+            page.style.transform = `rotateY(${angle}deg)`;
+            if (t < 1) requestAnimationFrame(flip);
+          }
+          requestAnimationFrame(flip);
+        }, 400 + i * 500);
+      });
+
+    }, { once: true });
+  }
+
+  /* ===== ③ コード：タイピング＋SVG描画 ===== */
+  if (chosen === 'lp-code') {
+    const logoImg  = document.querySelector('#lp-code .logo-img');
+    const editor   = document.getElementById('code-editor');
+    const drawing  = document.getElementById('code-drawing');
+
+    const lines = [
+      { ln:'1',  kw:'const ', fn:'frame', rest:' = {' },
+      { ln:'2',  kw:'  ', fn:'', rest:'x: 2, y: 2,' },
+      { ln:'3',  kw:'  ', fn:'', rest:'w: 80, h: 50,' },
+      { ln:'4',  kw:'  ', fn:'', rest:'stroke: "#0a0a0a"' },
+      { ln:'5',  kw:'', fn:'', rest:'}' },
+      { ln:'6',  kw:'', fn:'', rest:'' },
+      { ln:'7',  kw:'function ', fn:'drawStripes', rest:'(n) {' },
+      { ln:'8',  kw:'  ', fn:'', rest:'// horizontal lines' },
+      { ln:'9',  kw:'  for ', fn:'', rest:'(let i = 0; i < n; i++) {' },
+      { ln:'10', kw:'    ', fn:'draw', rest:'(frame.x, 10 + i * 4)' },
+      { ln:'11', kw:'  ', fn:'', rest:'}' },
+      { ln:'12', kw:'', fn:'', rest:'}' },
+      { ln:'13', kw:'', fn:'', rest:'' },
+      { ln:'14', kw:'', fn:'drawStripes', rest:'(5)' },
+    ];
+
+    logoImg.addEventListener('animationend', () => {
+      editor.style.opacity = '1';
+
+      let lineIdx = 0;
+      function typeLine() {
+        if (lineIdx >= lines.length) {
+          // 全行打ち終わったらSVG描画
+          setTimeout(startDrawing, 400);
+          return;
+        }
+        const data = lines[lineIdx];
+        const row = document.createElement('div');
+        row.className = 'line';
+
+        const ln = document.createElement('span');
+        ln.className = 'ln';
+        ln.textContent = data.ln;
+
+        const code = document.createElement('span');
+        code.className = 'code-text';
+
+        // キーワード部分
+        if (data.kw) {
+          const kw = document.createElement('span');
+          kw.className = 'kw';
+          kw.textContent = data.kw;
+          code.appendChild(kw);
+        }
+        // 関数名部分
+        if (data.fn) {
+          const fn = document.createElement('span');
+          fn.className = 'fn';
+          fn.textContent = data.fn;
+          code.appendChild(fn);
+        }
+        // 残り
+        if (data.rest) {
+          const rest = document.createTextNode(data.rest);
+          code.appendChild(rest);
+        }
+
+        row.appendChild(ln);
+        row.appendChild(code);
+        editor.appendChild(row);
+        lineIdx++;
+
+        // 次の行へ
+        setTimeout(typeLine, data.rest === '' ? 80 : 120 + Math.random() * 80);
+      }
+      setTimeout(typeLine, 300);
+    }, { once: true });
+
+    function startDrawing() {
+      drawing.style.opacity = '1';
+      const strokes = drawing.querySelectorAll('path, line, rect');
+      strokes.forEach((el, i) => {
+        const len = el.getTotalLength ? el.getTotalLength() : 200;
+        el.style.strokeDasharray  = len;
+        el.style.strokeDashoffset = len;
+        el.style.transition = `stroke-dashoffset ${0.6 + i * 0.15}s ease ${i * 0.2}s`;
+        requestAnimationFrame(() => {
+          el.style.strokeDashoffset = '0';
+        });
+      });
+    }
+  }
 </script>
 </body>
 </html>
