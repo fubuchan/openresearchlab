@@ -25,7 +25,7 @@
     position: fixed;
     inset: 0;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* 各ロゴのmargin-topで個別に上下位置を制御 */
     opacity: 0;
     pointer-events: none;
   }
@@ -75,10 +75,11 @@
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* ===== ① 看板：右端配置・右から滑り込み ===== */
+  /* ===== ① 看板：右端配置 ===== */
   #lp-sign { justify-content: flex-end; }
   #lp-sign .logo-img {
-    margin-right: min(-8vw, -80px);
+    margin-right: min(-4vw, -40px); /* 右位置：マイナスで右にはみ出す */
+    margin-top: 35vh;               /* 上下位置：増やすと下、減らすと上 */
   }
   #lp-sign.active .logo-img {
     animation: fromRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
@@ -87,11 +88,14 @@
     from { opacity:0; transform: translateX(40px); }
     to   { opacity:1; transform: translateX(0); }
   }
-  #lp-sign .meta-top { top:44px; left:14px; }
+  #lp-sign .meta-top { top:44px; left:44px; }
   #lp-sign .meta-bot { bottom:44px; left:44px; }
 
-  /* ===== ② 本：中央配置・下から浮上 ===== */
+  /* ===== ② 本：中央配置 ===== */
   #lp-book { justify-content: center; }
+  #lp-book .logo-img {
+    margin-top: 35vh; /* 上下位置：増やすと下、減らすと上 */
+  }
   #lp-book.active .logo-img {
     animation: fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
   }
@@ -102,10 +106,11 @@
   #lp-book .meta-top { top:44px; left:50%; transform:translateX(-50%); }
   #lp-book .meta-bot { bottom:44px; left:50%; transform:translateX(-50%); text-align:center; }
 
-  /* ===== ③ コード：左端配置・左から滑り込み ===== */
+  /* ===== ③ コード：左端配置 ===== */
   #lp-code { justify-content: flex-start; }
   #lp-code .logo-img {
-    margin-left: min(-4vw, -40px);
+    margin-left: min(-4vw, -40px); /* 左位置：マイナスで左にはみ出す */
+    margin-top: 35vh;              /* 上下位置：増やすと下、減らすと上 */
   }
   #lp-code.active .logo-img {
     animation: fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
