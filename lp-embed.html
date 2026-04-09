@@ -121,54 +121,36 @@
   }
   #lp-book .meta-top { top:44px; left:50%; transform:translateX(-50%); }
 
-  /* ページめくり */
-  .page {
-    position:absolute; top:0; left:50%;
-    width:50%; height:100%;
-    transform-origin:left center;
-    transform-style:preserve-3d;
-    pointer-events:none;
-  }
-  .page-front, .page-back {
-    position:absolute; inset:0;
-    backface-visibility:hidden;
-  }
-  .page-front {
-    background: #f5f5f2;
-    border-left: 1px solid rgba(10,10,10,0.1);
-    overflow: hidden;
-  }
-  .page-back {
-    background: #f5f5f2;
-    transform: rotateY(180deg);
-    border-right: 1px solid rgba(10,10,10,0.1);
-    overflow: hidden;
-  }
-  /* ロゴのストライプパターン：太い2本＋細い6本 */
-  .page-front::after, .page-back::after {
-    content: '';
+  /* 栞 */
+  #bookmark {
     position: absolute;
-    top: 12%; left: 0; right: 0;
-    height: 50%;
-    background:
-      linear-gradient(to bottom,
-        #0a0a0a 0px,   #0a0a0a 3px,
-        transparent 3px, transparent 8px,
-        #0a0a0a 8px,   #0a0a0a 11px,
-        transparent 11px, transparent 16px,
-        #0a0a0a 16px,  #0a0a0a 17.5px,
-        transparent 17.5px, transparent 21px,
-        #0a0a0a 21px,  #0a0a0a 22.5px,
-        transparent 22.5px, transparent 26px,
-        #0a0a0a 26px,  #0a0a0a 27.5px,
-        transparent 27.5px, transparent 31px,
-        #0a0a0a 31px,  #0a0a0a 32.5px,
-        transparent 32.5px, transparent 36px,
-        #0a0a0a 36px,  #0a0a0a 37.5px,
-        transparent 37.5px, transparent 41px,
-        #0a0a0a 41px,  #0a0a0a 42.5px,
-        transparent 42.5px
-      );
+    top: -18px;
+    right: 18%;
+    width: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform-origin: top center;
+    opacity: 0;
+  }
+  #bookmark-ribbon {
+    width: 14px;
+    background: var(--black);
+    /* 高さはJSで設定 */
+  }
+  #bookmark-tail {
+    width: 0;
+    height: 0;
+    border-left: 7px solid var(--black);
+    border-right: 7px solid var(--black);
+    border-bottom: 10px solid transparent;
+  }
+  @keyframes sway {
+    0%   { transform: rotate(0deg); }
+    25%  { transform: rotate(3deg); }
+    50%  { transform: rotate(0deg); }
+    75%  { transform: rotate(-3deg); }
+    100% { transform: rotate(0deg); }
   }
 
   /* ===== ③ コード ===== */
@@ -278,24 +260,65 @@
   <div class="meta meta-top">$ open research_lab --mode=public<span class="cursor"></span></div>
   <!-- コードエディタ -->
   <div id="code-editor"></div>
-  <!-- 描画SVG：海岸線 -->
+  <!-- 描画SVG：都市スカイライン -->
   <div id="code-drawing">
-    <svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- 水平線 -->
-      <line id="c-horizon" x1="0" y1="80" x2="300" y2="80" stroke="#0a0a0a" stroke-width="1.5"/>
-      <!-- 奥の波（細く・間隔狭く） -->
-      <path id="c-wave1" d="M0,88 Q15,85 30,88 Q45,91 60,88 Q75,85 90,88 Q105,91 120,88 Q135,85 150,88 Q165,91 180,88 Q195,85 210,88 Q225,91 240,88 Q255,85 270,88 Q285,91 300,88" stroke="#0a0a0a" stroke-width="0.6"/>
-      <path id="c-wave2" d="M0,93 Q15,90 30,93 Q45,96 60,93 Q75,90 90,93 Q105,96 120,93 Q135,90 150,93 Q165,96 180,93 Q195,90 210,93 Q225,96 240,93 Q255,90 270,93 Q285,96 300,93" stroke="#0a0a0a" stroke-width="0.6"/>
-      <!-- 中距離の波 -->
-      <path id="c-wave3" d="M0,102 Q20,97 40,102 Q60,107 80,102 Q100,97 120,102 Q140,107 160,102 Q180,97 200,102 Q220,107 240,102 Q260,97 280,102 Q290,104 300,102" stroke="#0a0a0a" stroke-width="0.9"/>
-      <path id="c-wave4" d="M0,110 Q20,105 40,110 Q60,115 80,110 Q100,105 120,110 Q140,115 160,110 Q180,105 200,110 Q220,115 240,110 Q260,105 280,110 Q290,112 300,110" stroke="#0a0a0a" stroke-width="0.9"/>
-      <!-- 手前の波（太く・振幅大きく） -->
-      <path id="c-wave5" d="M0,122 Q25,114 50,122 Q75,130 100,122 Q125,114 150,122 Q175,130 200,122 Q225,114 250,122 Q275,130 300,122" stroke="#0a0a0a" stroke-width="1.4"/>
-      <path id="c-wave6" d="M0,134 Q25,124 50,134 Q75,144 100,134 Q125,124 150,134 Q175,144 200,134 Q225,124 250,134 Q275,144 300,134" stroke="#0a0a0a" stroke-width="1.8"/>
-      <!-- 砂浜ライン -->
-      <path id="c-shore" d="M0,148 Q50,144 100,147 Q150,150 200,146 Q250,142 300,148" stroke="#0a0a0a" stroke-width="1.2"/>
-      <!-- 空：遠くの陸地シルエット -->
-      <path id="c-land" d="M0,80 Q40,72 80,75 Q120,78 160,70 Q200,62 240,68 Q270,73 300,80" stroke="#0a0a0a" stroke-width="1"/>
+    <svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid slice" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 地面ライン -->
+      <line id="sk-ground" x1="0" y1="140" x2="300" y2="140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル群：左から右へ順番に描画 -->
+      <!-- ビル1：左端・低め -->
+      <polyline id="sk-b1" points="0,140 0,110 22,110 22,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル2：やや高め -->
+      <polyline id="sk-b2" points="18,140 18,90 38,90 38,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル3：細いアンテナ付き高層 -->
+      <polyline id="sk-b3" points="35,140 35,60 50,60 50,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line id="sk-a3" x1="42" y1="60" x2="42" y2="48" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- ビル4：幅広・中層 -->
+      <polyline id="sk-b4" points="48,140 48,95 72,95 72,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル5：高層 -->
+      <polyline id="sk-b5" points="69,140 69,50 84,50 84,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line id="sk-a5" x1="76" y1="50" x2="76" y2="38" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- ビル6：低め -->
+      <polyline id="sk-b6" points="82,140 82,105 100,105 100,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル7：最高層・中央 -->
+      <polyline id="sk-b7" points="97,140 97,35 115,35 115,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line id="sk-a7" x1="106" y1="35" x2="106" y2="20" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- ビル8：中層 -->
+      <polyline id="sk-b8" points="112,140 112,70 130,70 130,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル9：幅広・低め -->
+      <polyline id="sk-b9" points="127,140 127,100 155,100 155,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル10：高層 -->
+      <polyline id="sk-b10" points="152,140 152,55 168,55 168,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line id="sk-a10" x1="160" y1="55" x2="160" y2="42" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- ビル11：中層 -->
+      <polyline id="sk-b11" points="165,140 165,80 182,80 182,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル12：細い高層 -->
+      <polyline id="sk-b12" points="179,140 179,60 192,60 192,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル13：幅広・低め -->
+      <polyline id="sk-b13" points="189,140 189,95 215,95 215,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル14：高層 -->
+      <polyline id="sk-b14" points="212,140 212,45 228,45 228,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <line id="sk-a14" x1="220" y1="45" x2="220" y2="30" stroke="#0a0a0a" stroke-width="0.8"/>
+      <!-- ビル15：中層 -->
+      <polyline id="sk-b15" points="225,140 225,75 245,75 245,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル16：低め -->
+      <polyline id="sk-b16" points="242,140 242,108 260,108 260,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル17：右端・中層 -->
+      <polyline id="sk-b17" points="257,140 257,85 278,85 278,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- ビル18：右端・低め -->
+      <polyline id="sk-b18" points="275,140 275,115 300,115 300,140" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- 窓ライン（いくつかのビルに） -->
+      <line id="sk-w1" x1="38" y1="75"  x2="49" y2="75"  stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w2" x1="38" y1="85"  x2="49" y2="85"  stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w3" x1="70" y1="65"  x2="83" y2="65"  stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w4" x1="70" y1="78"  x2="83" y2="78"  stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w5" x1="98" y1="55"  x2="114" y2="55" stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w6" x1="98" y1="68"  x2="114" y2="68" stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w7" x1="98" y1="81"  x2="114" y2="81" stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w8" x1="153" y1="70" x2="167" y2="70" stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w9" x1="153" y1="83" x2="167" y2="83" stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w10" x1="213" y1="60" x2="227" y2="60" stroke="#0a0a0a" stroke-width="0.5"/>
+      <line id="sk-w11" x1="213" y1="73" x2="227" y2="73" stroke="#0a0a0a" stroke-width="0.5"/>
     </svg>
   </div>
   <nav class="nav">
@@ -367,59 +390,40 @@
     }, { once: true });
   }
 
-  /* ===== ② 本：ページめくり ===== */
+  /* ===== ② 本：栞 ===== */
   if (chosen === 'lp-book') {
     const bookLogo = document.getElementById('book-logo');
     const bookWrap = document.querySelector('#lp-book .book-wrap');
 
     bookLogo.addEventListener('animationend', () => {
-      const logoW = bookLogo.offsetWidth;
       const logoH = bookLogo.offsetHeight;
-      bookWrap.style.width  = logoW + 'px';
-      bookWrap.style.height = logoH + 'px';
 
-      // ページを3枚作ってタイミングをずらしてめくる
-      const pageCount = 4;
-      const pages = [];
+      // 栞を生成
+      const bookmark = document.createElement('div');
+      bookmark.id = 'bookmark';
 
-      for (let i = 0; i < pageCount; i++) {
-        const page = document.createElement('div');
-        page.className = 'page';
-        page.style.width = (logoW / 2) + 'px';
-        page.style.height = logoH + 'px';
-        page.style.zIndex = pageCount - i;
-        // 少しずつ色を変える
-        const front = document.createElement('div');
-        front.className = 'page-front';
+      const ribbon = document.createElement('div');
+      ribbon.id = 'bookmark-ribbon';
+      // ロゴの高さの40%分だけ飛び出す
+      ribbon.style.height = (logoH * 0.42) + 'px';
 
-        const back = document.createElement('div');
-        back.className = 'page-back';
+      const tail = document.createElement('div');
+      tail.id = 'bookmark-tail';
 
-        page.appendChild(front);
-        page.appendChild(back);
-        bookWrap.appendChild(page);
-        pages.push(page);
-      }
+      bookmark.appendChild(ribbon);
+      bookmark.appendChild(tail);
+      bookWrap.appendChild(bookmark);
 
-      // 順番にめくる
-      pages.forEach((page, i) => {
-        setTimeout(() => {
-          const delay = 600;
-          const dur   = 900;
-          const start = performance.now();
+      // フェードイン
+      setTimeout(() => {
+        bookmark.style.transition = 'opacity 0.6s ease';
+        bookmark.style.opacity = '1';
+      }, 200);
 
-          function flip(now) {
-            const t = Math.min((now - start) / dur, 1);
-            const ease = t < 0.5
-              ? 4 * t * t * t
-              : 1 - Math.pow(-2 * t + 2, 3) / 2;
-            const angle = ease * -180;
-            page.style.transform = `rotateY(${angle}deg)`;
-            if (t < 1) requestAnimationFrame(flip);
-          }
-          requestAnimationFrame(flip);
-        }, 400 + i * 500);
-      });
+      // 風で揺れる
+      setTimeout(() => {
+        bookmark.style.animation = 'sway 3s ease-in-out infinite';
+      }, 900);
 
     }, { once: true });
   }
@@ -431,22 +435,22 @@
     const drawing  = document.getElementById('code-drawing');
 
     const lines = [
-      { ln:'1',  kw:'const ', fn:'horizon', rest:' = 80' },
-      { ln:'2',  kw:'const ', fn:'waves',   rest:' = []' },
+      { ln:'1',  kw:'const ', fn:'ground', rest:' = 140' },
+      { ln:'2',  kw:'const ', fn:'city',   rest:' = []' },
       { ln:'3',  kw:'', fn:'', rest:'' },
-      { ln:'4',  kw:'function ', fn:'drawWave', rest:'(y, amp, sw) {' },
-      { ln:'5',  kw:'  ', fn:'', rest:'// sine curve across viewport' },
-      { ln:'6',  kw:'  ', fn:'', rest:'let d = `M0,${y}`' },
-      { ln:'7',  kw:'  for ', fn:'', rest:'(let x = 0; x < 300; x += 25) {' },
-      { ln:'8',  kw:'    ', fn:'', rest:'d += ` Q${x+12},${y-amp} ${x+25},${y}`' },
-      { ln:'9',  kw:'  ', fn:'', rest:'}' },
-      { ln:'10', kw:'  ', fn:'path', rest:'(d, { strokeWidth: sw })' },
-      { ln:'11', kw:'', fn:'', rest:'}' },
-      { ln:'12', kw:'', fn:'', rest:'' },
-      { ln:'13', kw:'// ', fn:'', rest:'render' },
-      { ln:'14', kw:'', fn:'drawWave', rest:'(102, 5, 0.9)' },
-      { ln:'15', kw:'', fn:'drawWave', rest:'(122, 8, 1.4)' },
-      { ln:'16', kw:'', fn:'drawWave', rest:'(134, 10, 1.8)' },
+      { ln:'4',  kw:'function ', fn:'building', rest:'(x, y, w) {' },
+      { ln:'5',  kw:'  ', fn:'', rest:'// draw facade from ground' },
+      { ln:'6',  kw:'  ', fn:'polyline', rest:'([x, ground, x, y,' },
+      { ln:'7',  kw:'  ', fn:'', rest:'  x+w, y, x+w, ground])' },
+      { ln:'8',  kw:'', fn:'', rest:'}' },
+      { ln:'9',  kw:'', fn:'', rest:'' },
+      { ln:'10', kw:'// ', fn:'', rest:'left district' },
+      { ln:'11', kw:'', fn:'building', rest:'(35, 60, 15)' },
+      { ln:'12', kw:'', fn:'building', rest:'(69, 50, 15)' },
+      { ln:'13', kw:'// ', fn:'', rest:'center tower' },
+      { ln:'14', kw:'', fn:'building', rest:'(97, 35, 18)' },
+      { ln:'15', kw:'// ', fn:'', rest:'right district' },
+      { ln:'16', kw:'', fn:'building', rest:'(212, 45, 16)' },
     ];
 
     logoImg.addEventListener('animationend', () => {
