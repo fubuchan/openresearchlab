@@ -25,7 +25,7 @@
     position: fixed;
     inset: 0;
     display: flex;
-    align-items: flex-start; /* 各ロゴのmargin-topで個別に上下位置を制御 */
+    align-items: flex-start;
     opacity: 0;
     pointer-events: none;
   }
@@ -75,11 +75,17 @@
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
 
-  /* ===== ① 看板：右端配置 ===== */
+  /* ===== ① 看板 ===== */
   #lp-sign { justify-content: flex-end; }
+  #lp-sign .logo-wrap {
+    position: relative;
+    flex-shrink: 0;
+    margin-right: min(-4vw, -40px);
+    margin-top: 35vh;
+  }
   #lp-sign .logo-img {
-    margin-right: min(-4vw, -40px); /* 右位置：マイナスで右にはみ出す */
-    margin-top: 5vh;               /* 上下位置：増やすと下、減らすと上 */
+    margin-right: 0;
+    margin-top: 0;
   }
   #lp-sign.active .logo-img {
     animation: fromRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
@@ -91,10 +97,50 @@
   #lp-sign .meta-top { top:44px; left:44px; }
   #lp-sign .meta-bot { bottom:44px; left:44px; }
 
-  /* ===== ② 本：中央配置 ===== */
+  /* 鳥のコンテナ */
+  #bird-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  /* 鳥SVGのラッパー：飛んでくる動き */
+  #bird-wrap {
+    position: absolute;
+    opacity: 0;
+  }
+
+  /* 羽ばたきアニメーション（上羽） */
+  @keyframes flapUp {
+    0%   { d: path('M8,10 Q4,4 0,8');   }
+    50%  { d: path('M8,10 Q4,14 0,10'); }
+    100% { d: path('M8,10 Q4,4 0,8');   }
+  }
+  /* 羽ばたきアニメーション（下羽） */
+  @keyframes flapDown {
+    0%   { d: path('M8,10 Q12,4 16,8');   }
+    50%  { d: path('M8,10 Q12,14 16,10'); }
+    100% { d: path('M8,10 Q12,4 16,8');   }
+  }
+
+  .wing-left  { animation: flapUp   0.3s ease-in-out infinite; }
+  .wing-right { animation: flapDown 0.3s ease-in-out infinite; }
+
+  /* 止まった後の首振り */
+  @keyframes headTilt {
+    0%   { transform: rotate(0deg);   }
+    25%  { transform: rotate(15deg);  }
+    50%  { transform: rotate(0deg);   }
+    75%  { transform: rotate(-12deg); }
+    100% { transform: rotate(0deg);   }
+  }
+
+  /* ===== ② 本 ===== */
   #lp-book { justify-content: center; }
   #lp-book .logo-img {
-    margin-top: 20vh; /* 上下位置：増やすと下、減らすと上 */
+    margin-top: 35vh;
   }
   #lp-book.active .logo-img {
     animation: fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
@@ -106,11 +152,11 @@
   #lp-book .meta-top { top:44px; left:50%; transform:translateX(-50%); }
   #lp-book .meta-bot { bottom:44px; left:50%; transform:translateX(-50%); text-align:center; }
 
-  /* ===== ③ コード：左端配置 ===== */
+  /* ===== ③ コード ===== */
   #lp-code { justify-content: flex-start; }
   #lp-code .logo-img {
-    margin-left: min(-4vw, -40px); /* 左位置：マイナスで左にはみ出す */
-    margin-top: 55vh;              /* 上下位置：増やすと下、減らすと上 */
+    margin-left: min(-4vw, -40px);
+    margin-top: 35vh;
   }
   #lp-code.active .logo-img {
     animation: fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
@@ -127,7 +173,35 @@
 
 <!-- ① 看板 -->
 <div class="lp" id="lp-sign">
-  <img class="logo-img" src="logo.png" alt="Open Research Lab.">
+  <div class="logo-wrap">
+    <img class="logo-img" src="logo.png" alt="Open Research Lab.">
+    <!-- 鳥 -->
+    <div id="bird-wrap">
+      <svg id="bird-svg" width="36" height="28" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- 胴体 -->
+        <ellipse id="body" cx="8" cy="11" rx="3" ry="2" fill="#0a0a0a"/>
+        <!-- 尾 -->
+        <polygon points="5,12 3,14 5,13" fill="#0a0a0a"/>
+        <!-- 左羽 -->
+        <path class="wing-left" d="M8,10 Q4,4 0,8" stroke="#0a0a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <!-- 右羽 -->
+        <path class="wing-right" d="M8,10 Q12,4 16,8" stroke="#0a0a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <!-- 頭 -->
+        <g id="bird-head">
+          <circle cx="10.5" cy="8.5" r="2" fill="#0a0a0a"/>
+          <!-- くちばし -->
+          <polygon points="12.5,8 14.5,8.5 12.5,9" fill="#0a0a0a"/>
+          <!-- 目 -->
+          <circle cx="11.2" cy="8" r="0.35" fill="#f5f5f2"/>
+        </g>
+        <!-- 足 -->
+        <line x1="7.5" y1="13" x2="7" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="8.5" y1="13" x2="9" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="7"  y1="15" x2="6" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+        <line x1="9"  y1="15" x2="10" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
+      </svg>
+    </div>
+  </div>
   <div class="meta meta-top">Open Research Lab. — Est. 2025</div>
   <div class="meta meta-bot">Kyushu University · Public Design</div>
 </div>
@@ -147,9 +221,81 @@
 </div>
 
 <script>
+  // ランダムLP選択
   const lps = ['lp-sign', 'lp-book', 'lp-code'];
   const chosen = lps[Math.floor(Math.random() * lps.length)];
   document.getElementById(chosen).classList.add('active');
+
+  // 看板LPの場合のみ鳥アニメーション
+  if (chosen === 'lp-sign') {
+    const logoImg  = document.querySelector('#lp-sign .logo-img');
+    const birdWrap = document.getElementById('bird-wrap');
+    const birdSvg  = document.getElementById('bird-svg');
+    const birdHead = document.getElementById('bird-head');
+    const wingL    = document.querySelector('.wing-left');
+    const wingR    = document.querySelector('.wing-right');
+
+    logoImg.addEventListener('animationend', () => {
+      // ロゴの実サイズを取得してロゴ上端にスナップ
+      const logoRect = logoImg.getBoundingClientRect();
+      const wrapRect = logoImg.closest('.logo-wrap').getBoundingClientRect();
+
+      // ロゴ上端の相対Y（logo-wrap基準）
+      const logoTopY = logoRect.top - wrapRect.top;
+      // ロゴ右端の相対X（logo-wrap基準）
+      const logoRightX = logoRect.right - wrapRect.left;
+
+      // 鳥はロゴの横幅の約30%あたりから止まる（右寄り）
+      const landX = logoRightX * 0.6;
+      const landY = logoTopY; // ロゴ上端
+
+      // 鳥のSVGサイズ（表示サイズ）
+      const birdW = 36;
+      const birdH = 28;
+
+      // 画面左外から飛んでくる開始位置
+      const startX = -wrapRect.left - birdW - 20;
+      const startY = landY - 60; // 少し上から降りてくる
+
+      birdWrap.style.left = startX + 'px';
+      birdWrap.style.top  = startY + 'px';
+      birdWrap.style.opacity = '1';
+
+      // 飛行フェーズ：左外→着地点
+      const duration = 1400; // ms
+      const startTime = performance.now();
+
+      function flyTo(now) {
+        const t = Math.min((now - startTime) / duration, 1);
+        // イーズアウト
+        const ease = 1 - Math.pow(1 - t, 3);
+        const x = startX + (landX - birdW / 2 - startX) * ease;
+        // 放物線で降りてくる
+        const y = startY + (landY - birdH - startY) * ease - Math.sin(Math.PI * t) * 30;
+        birdWrap.style.left = x + 'px';
+        birdWrap.style.top  = y + 'px';
+
+        if (t < 1) {
+          requestAnimationFrame(flyTo);
+        } else {
+          // 着地：羽ばたき停止
+          wingL.style.animation = 'none';
+          wingR.style.animation = 'none';
+          // 羽を閉じた形に
+          wingL.setAttribute('d', 'M8,10 Q6,10 5,11');
+          wingR.setAttribute('d', 'M8,10 Q10,10 11,11');
+
+          // 少し待ってから首振り開始
+          setTimeout(() => {
+            birdHead.style.transformOrigin = '10.5px 8.5px';
+            birdHead.style.animation = 'headTilt 1.8s ease-in-out infinite';
+          }, 400);
+        }
+      }
+
+      requestAnimationFrame(flyTo);
+    }, { once: true });
+  }
 </script>
 </body>
 </html>
