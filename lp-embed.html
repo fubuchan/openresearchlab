@@ -1,328 +1,141 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Open Research Lab.</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+import { useEffect, useRef, useState } from "react"
+import { addPropertyControls, ControlType } from "framer"
 
-  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+/**
+ * TypingText
+ * スクロールで表示されたタイミングでテキストがタイピングされる演出
+ */
+export default function TypingText({
+    text = 'We are "Open".',
+    fontSize = 64,
+    fontFamily = "DotGothic16, sans-serif",
+    color = "#0a0a0a",
+    speed = 80,
+    cursorChar = "|",
+    cursorBlinkMs = 500,
+    delayMs = 0,
+}) {
+    const [displayed, setDisplayed] = useState("")
+    const [started, setStarted] = useState(false)
+    const [showCursor, setShowCursor] = useState(true)
+    const [done, setDone] = useState(false)
+    const ref = useRef(null)
 
-  :root {
-    --black: #0a0a0a;
-    --white: #f5f5f2;
-  }
+    // IntersectionObserver でスクロールをトリガー
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && !started) {
+                    setTimeout(() => setStarted(true), delayMs)
+                }
+            },
+            { threshold: 0.4 }
+        )
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [started, delayMs])
 
-  html, body {
-    width: 100%; height: 100%;
-    overflow: hidden;
-    background: var(--white);
-    font-family: 'Share Tech Mono', monospace;
-  }
+    // タイピング
+    useEffect(() => {
+        if (!started) return
+        let i = 0
+        setDisplayed("")
+        const interval = setInterval(() => {
+            i++
+            setDisplayed(text.slice(0, i))
+            if (i >= text.length) {
+                clearInterval(interval)
+                setDone(true)
+            }
+        }, speed)
+        return () => clearInterval(interval)
+    }, [started, text, speed])
 
-  .lp {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: flex-start;
-    opacity: 0;
-    pointer-events: none;
-  }
+    // カーソル点滅
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setShowCursor((v) => !v)
+        }, cursorBlinkMs)
+        return () => clearInterval(interval)
+    }, [cursorBlinkMs])
 
-  .lp.active {
-    opacity: 1;
-    pointer-events: all;
-  }
+    return (
+        <div
+            ref={ref}
+            style={{
+                fontFamily,
+                fontSize,
+                color,
+                lineHeight: 1.2,
+                whiteSpace: "pre",
+                display: "inline-block",
+            }}
+        >
+            {displayed}
+            <span
+                style={{
+                    display: "inline-block",
+                    width: 2,
+                    height: "0.85em",
+                    background: color,
+                    opacity: showCursor ? 1 : 0,
+                    verticalAlign: "middle",
+                    marginLeft: 3,
+                }}
+            />
+        </div>
+    )
+}
 
-  /* ロゴ画像 */
-  .logo-img {
-    display: block;
-    width: min(52vw, 560px);
-    height: auto;
-    flex-shrink: 0;
-    opacity: 0;
-  }
-
-  /* メタテキスト */
-  .meta {
-    position: absolute;
-    font-family: 'Share Tech Mono', monospace;
-    font-size: clamp(9px, 0.9vw, 11px);
-    color: var(--black);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    opacity: 0;
-  }
-
-  .lp.active .meta {
-    animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
-  }
-
-  @keyframes fadeUp {
-    from { opacity:0; transform: translateY(8px); }
-    to   { opacity:0.38; transform: translateY(0); }
-  }
-
-  /* カーソル */
-  .cursor {
-    display: inline-block;
-    width: 0.55em; height: 0.9em;
-    background: var(--black);
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-    margin-left: 2px;
-  }
-  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-
-  /* ===== ① 看板 ===== */
-  #lp-sign { justify-content: flex-end; }
-  #lp-sign .logo-wrap {
-    position: relative;
-    flex-shrink: 0;
-    margin-right: min(-4vw, -40px);
-    margin-top: 35vh;
-  }
-  #lp-sign .logo-img {
-    margin-right: 0;
-    margin-top: 0;
-  }
-  #lp-sign.active .logo-img {
-    animation: fromRight 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
-  }
-  @keyframes fromRight {
-    from { opacity:0; transform: translateX(40px); }
-    to   { opacity:1; transform: translateX(0); }
-  }
-  #lp-sign .meta-top { top:44px; left:44px; }
-  #lp-sign .meta-bot { bottom:44px; left:44px; }
-
-  /* 鳥のコンテナ */
-  #bird-container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    pointer-events: none;
-  }
-
-  /* 鳥SVGのラッパー：飛んでくる動き */
-  #bird-wrap {
-    position: absolute;
-    opacity: 0;
-  }
-
-  /* 羽ばたき：付け根を軸にrotateで開閉 */
-  @keyframes flapLeft {
-    0%   { transform: rotate(-35deg); }
-    50%  { transform: rotate(20deg);  }
-    100% { transform: rotate(-35deg); }
-  }
-  @keyframes flapRight {
-    0%   { transform: rotate(35deg);  }
-    50%  { transform: rotate(-20deg); }
-    100% { transform: rotate(35deg);  }
-  }
-
-  .wing-left  {
-    transform-origin: 8px 10px;
-    animation: flapLeft 0.35s ease-in-out infinite;
-  }
-  .wing-right {
-    transform-origin: 8px 10px;
-    animation: flapRight 0.35s ease-in-out infinite;
-  }
-
-  /* 止まった後の首振り */
-  @keyframes headTilt {
-    0%   { transform: rotate(0deg);   }
-    25%  { transform: rotate(15deg);  }
-    50%  { transform: rotate(0deg);   }
-    75%  { transform: rotate(-12deg); }
-    100% { transform: rotate(0deg);   }
-  }
-
-  /* ===== ② 本 ===== */
-  #lp-book { justify-content: center; }
-  #lp-book .logo-img {
-    margin-top: 35vh;
-  }
-  #lp-book.active .logo-img {
-    animation: fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
-  }
-  @keyframes fromBelow {
-    from { opacity:0; transform: translateY(20px); }
-    to   { opacity:1; transform: translateY(0); }
-  }
-  #lp-book .meta-top { top:44px; left:50%; transform:translateX(-50%); }
-  #lp-book .meta-bot { bottom:44px; left:50%; transform:translateX(-50%); text-align:center; }
-
-  /* ===== ③ コード ===== */
-  #lp-code { justify-content: flex-start; }
-  #lp-code .logo-img {
-    margin-left: min(-4vw, -40px);
-    margin-top: 35vh;
-  }
-  #lp-code.active .logo-img {
-    animation: fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;
-  }
-  @keyframes fromLeft {
-    from { opacity:0; transform: translateX(-40px); }
-    to   { opacity:1; transform: translateX(0); }
-  }
-  #lp-code .meta-top { top:44px; right:44px; text-align:right; }
-  #lp-code .meta-bot { bottom:44px; right:44px; text-align:right; }
-
-
-</style>
-</head>
-<body>
-
-<!-- スクロールコンテナ -->
-<!-- ファーストビュー（100vh） -->
-<!-- ① 看板 -->
-<div class="lp" id="lp-sign">
-  <div class="logo-wrap">
-    <img class="logo-img" src="logo.png" alt="Open Research Lab.">
-    <!-- 鳥 -->
-    <div id="bird-wrap">
-      <svg id="bird-svg" width="56" height="44" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- 胴体 -->
-        <ellipse id="body" cx="8" cy="11" rx="3" ry="2" fill="#0a0a0a"/>
-        <!-- 尾 -->
-        <polygon points="5,12 3,14 5,13" fill="#0a0a0a"/>
-        <!-- 左羽：付け根(8,10)を軸に回転する塗り面 -->
-        <path class="wing-left" d="M8,10 Q5,8 2,9 Q4,11 8,10 Z" fill="#0a0a0a"/>
-        <!-- 右羽：付け根(8,10)を軸に回転する塗り面 -->
-        <path class="wing-right" d="M8,10 Q11,8 14,9 Q12,11 8,10 Z" fill="#0a0a0a"/>
-        <!-- 頭 -->
-        <g id="bird-head">
-          <circle cx="10.5" cy="8.5" r="2" fill="#0a0a0a"/>
-          <!-- くちばし -->
-          <polygon points="12.5,8 14.5,8.5 12.5,9" fill="#0a0a0a"/>
-
-        </g>
-        <!-- 足 -->
-        <line x1="7.5" y1="13" x2="7" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-        <line x1="8.5" y1="13" x2="9" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-        <line x1="7"  y1="15" x2="6" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-        <line x1="9"  y1="15" x2="10" y2="15" stroke="#0a0a0a" stroke-width="0.8"/>
-      </svg>
-    </div>
-  </div>
-  <div class="meta meta-top">Open Research Lab. — Est. 2025</div>
-  <div class="meta meta-bot">Kyushu University · Public Design</div>
-</div>
-
-<!-- ② 本 -->
-<div class="lp" id="lp-book">
-  <img class="logo-img" src="logo.png" alt="Open Research Lab.">
-  <div class="meta meta-top">Vol. ∞</div>
-  <div class="meta meta-bot">Research · Edition · Distribution</div>
-</div>
-
-<!-- ③ コーディングソフト -->
-<div class="lp" id="lp-code">
-  <img class="logo-img" src="logo.png" alt="Open Research Lab.">
-  <div class="meta meta-top">$ open research_lab --mode=public<span class="cursor"></span></div>
-  <div class="meta meta-bot">Process · Publication · Platform</div>
-
-
-<script>
-  // ランダムLP選択
-  const lps = ['lp-sign', 'lp-book', 'lp-code'];
-  const chosen = lps[Math.floor(Math.random() * lps.length)];
-  document.getElementById(chosen).classList.add('active');
-
-  // 看板LPの場合のみ鳥アニメーション
-  if (chosen === 'lp-sign') {
-    const logoImg  = document.querySelector('#lp-sign .logo-img');
-    const birdWrap = document.getElementById('bird-wrap');
-    const birdSvg  = document.getElementById('bird-svg');
-    const birdHead = document.getElementById('bird-head');
-    const wingL    = document.querySelector('.wing-left');
-    const wingR    = document.querySelector('.wing-right');
-
-    logoImg.addEventListener('animationend', () => {
-      // ロゴの実サイズを取得してロゴ上端にスナップ
-      const logoRect = logoImg.getBoundingClientRect();
-      const wrapRect = logoImg.closest('.logo-wrap').getBoundingClientRect();
-
-      // ロゴ上端の相対Y（logo-wrap基準）
-      const logoTopY = logoRect.top - wrapRect.top;
-      // ロゴ右端の相対X（logo-wrap基準）
-      const logoRightX = logoRect.right - wrapRect.left;
-
-      // 鳥はロゴの横幅の約30%あたりから止まる（右寄り）
-      const landX = logoRightX * 0.25;
-      const landY = logoTopY; // ロゴ上端
-
-      // 鳥のSVGサイズ（表示サイズ）
-      const birdW = 56;
-      const birdH = 44;
-
-      // 開始位置：画面上部の真ん中（logo-wrap基準に変換）
-      const screenCenterX = window.innerWidth / 2 - wrapRect.left;
-      const startX = screenCenterX;
-      const startY = -wrapRect.top - birdH - 20;
-
-      // 着地点
-      const endX = landX - birdW / 2;
-      const endY = landY - birdH;
-
-      // 弧の制御点
-      const cpX = (startX + endX) / 2 + (endX - startX) * 0.3;
-      const cpY = (startY + endY) / 2 - 80;
-
-      birdWrap.style.left = startX + 'px';
-      birdWrap.style.top  = startY + 'px';
-      birdWrap.style.opacity = '1';
-
-      // 飛行フェーズ：二次ベジェ曲線
-      const duration = 3200;
-      const startTime = performance.now();
-
-      function flyTo(now) {
-        const t = Math.min((now - startTime) / duration, 1);
-        const ease = 1 - Math.pow(1 - t, 2.5);
-        const e = ease;
-        const x = Math.pow(1-e,2)*startX + 2*(1-e)*e*cpX + Math.pow(e,2)*endX;
-        const y = Math.pow(1-e,2)*startY + 2*(1-e)*e*cpY + Math.pow(e,2)*endY;
-        birdWrap.style.left = x + 'px';
-        birdWrap.style.top  = y + 'px';
-
-        if (t < 1) {
-          requestAnimationFrame(flyTo);
-        } else {
-          // 着地：羽ばたき停止
-          wingL.style.animation = 'none';
-          wingR.style.animation = 'none';
-          // 羽を閉じた形に
-          wingL.setAttribute('d', 'M8,10 Q6,10 6,11 Q7,11 8,10 Z');
-          wingR.setAttribute('d', 'M8,10 Q10,10 10,11 Q9,11 8,10 Z');
-
-          // 少し待ってから首振り開始
-          setTimeout(() => {
-            birdHead.style.transformOrigin = '10.5px 8.5px';
-            birdHead.style.animation = 'headTilt 1.8s ease-in-out infinite';
-          }, 400);
-        }
-      }
-
-      requestAnimationFrame(flyTo);
-    }, { once: true });
-  }
-
-  // ステートメントのフェードイン
-  const statementInner = document.querySelector('.statement-inner');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        statementInner.classList.add('visible');
-      }
-    });
-  }, { threshold: 0.2 });
-  observer.observe(statementInner);
-</script>
-</body>
-</html>
+addPropertyControls(TypingText, {
+    text: {
+        type: ControlType.String,
+        title: "Text",
+        defaultValue: 'We are "Open".',
+    },
+    fontSize: {
+        type: ControlType.Number,
+        title: "Font Size",
+        defaultValue: 64,
+        min: 12,
+        max: 200,
+    },
+    fontFamily: {
+        type: ControlType.String,
+        title: "Font Family",
+        defaultValue: "DotGothic16, sans-serif",
+    },
+    color: {
+        type: ControlType.Color,
+        title: "Color",
+        defaultValue: "#0a0a0a",
+    },
+    speed: {
+        type: ControlType.Number,
+        title: "Speed (ms/char)",
+        defaultValue: 80,
+        min: 10,
+        max: 500,
+    },
+    cursorChar: {
+        type: ControlType.String,
+        title: "Cursor",
+        defaultValue: "|",
+    },
+    cursorBlinkMs: {
+        type: ControlType.Number,
+        title: "Cursor Blink (ms)",
+        defaultValue: 500,
+        min: 100,
+        max: 2000,
+    },
+    delayMs: {
+        type: ControlType.Number,
+        title: "Delay (ms)",
+        defaultValue: 0,
+        min: 0,
+        max: 3000,
+    },
+})
