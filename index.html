@@ -112,21 +112,26 @@
     opacity: 0;
   }
 
-  /* 羽ばたきアニメーション（上羽） */
-  @keyframes flapUp {
-    0%   { d: path('M8,10 Q4,4 0,8');   }
-    50%  { d: path('M8,10 Q4,14 0,10'); }
-    100% { d: path('M8,10 Q4,4 0,8');   }
+  /* 羽ばたき：付け根を軸にrotateで開閉 */
+  @keyframes flapLeft {
+    0%   { transform: rotate(-35deg); }
+    50%  { transform: rotate(20deg);  }
+    100% { transform: rotate(-35deg); }
   }
-  /* 羽ばたきアニメーション（下羽） */
-  @keyframes flapDown {
-    0%   { d: path('M8,10 Q12,4 16,8');   }
-    50%  { d: path('M8,10 Q12,14 16,10'); }
-    100% { d: path('M8,10 Q12,4 16,8');   }
+  @keyframes flapRight {
+    0%   { transform: rotate(35deg);  }
+    50%  { transform: rotate(-20deg); }
+    100% { transform: rotate(35deg);  }
   }
 
-  .wing-left  { animation: flapUp   0.3s ease-in-out infinite; }
-  .wing-right { animation: flapDown 0.3s ease-in-out infinite; }
+  .wing-left  {
+    transform-origin: 8px 10px;
+    animation: flapLeft 0.35s ease-in-out infinite;
+  }
+  .wing-right {
+    transform-origin: 8px 10px;
+    animation: flapRight 0.35s ease-in-out infinite;
+  }
 
   /* 止まった後の首振り */
   @keyframes headTilt {
@@ -182,10 +187,10 @@
         <ellipse id="body" cx="8" cy="11" rx="3" ry="2" fill="#0a0a0a"/>
         <!-- 尾 -->
         <polygon points="5,12 3,14 5,13" fill="#0a0a0a"/>
-        <!-- 左羽 -->
-        <path class="wing-left" d="M8,10 Q4,4 0,8" stroke="#0a0a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
-        <!-- 右羽 -->
-        <path class="wing-right" d="M8,10 Q12,4 16,8" stroke="#0a0a0a" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+        <!-- 左羽：付け根(8,10)を軸に回転する塗り面 -->
+        <path class="wing-left" d="M8,10 Q5,8 2,9 Q4,11 8,10 Z" fill="#0a0a0a"/>
+        <!-- 右羽：付け根(8,10)を軸に回転する塗り面 -->
+        <path class="wing-right" d="M8,10 Q11,8 14,9 Q12,11 8,10 Z" fill="#0a0a0a"/>
         <!-- 頭 -->
         <g id="bird-head">
           <circle cx="10.5" cy="8.5" r="2" fill="#0a0a0a"/>
@@ -289,8 +294,8 @@
           wingL.style.animation = 'none';
           wingR.style.animation = 'none';
           // 羽を閉じた形に
-          wingL.setAttribute('d', 'M8,10 Q6,10 5,11');
-          wingR.setAttribute('d', 'M8,10 Q10,10 11,11');
+          wingL.setAttribute('d', 'M8,10 Q6,10 6,11 Q7,11 8,10 Z');
+          wingR.setAttribute('d', 'M8,10 Q10,10 10,11 Q9,11 8,10 Z');
 
           // 少し待ってから首振り開始
           setTimeout(() => {
