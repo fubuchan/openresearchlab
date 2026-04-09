@@ -278,36 +278,24 @@
   <div class="meta meta-top">$ open research_lab --mode=public<span class="cursor"></span></div>
   <!-- コードエディタ -->
   <div id="code-editor"></div>
-  <!-- 描画SVG：店舗ファサード -->
+  <!-- 描画SVG：海岸線 -->
   <div id="code-drawing">
-    <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <!-- 地面 -->
-      <line id="sf-ground" x1="0" y1="115" x2="200" y2="115" stroke="#0a0a0a" stroke-width="1.2"/>
-      <!-- 建物外壁 -->
-      <rect id="sf-wall" x="20" y="20" width="160" height="95" stroke="#0a0a0a" stroke-width="1.5" fill="none"/>
-      <!-- 屋根ライン -->
-      <line id="sf-roof" x1="10" y1="20" x2="190" y2="20" stroke="#0a0a0a" stroke-width="2"/>
-      <!-- 看板エリア -->
-      <rect id="sf-sign" x="50" y="28" width="100" height="22" stroke="#0a0a0a" stroke-width="1" fill="none"/>
-      <!-- 看板テキスト代替ライン -->
-      <line id="sf-st1" x1="60" y1="36" x2="140" y2="36" stroke="#0a0a0a" stroke-width="1.2"/>
-      <line id="sf-st2" x1="60" y1="42" x2="120" y2="42" stroke="#0a0a0a" stroke-width="0.7"/>
-      <!-- ショーウィンドウ左 -->
-      <rect id="sf-wl" x="28" y="60" width="50" height="55" stroke="#0a0a0a" stroke-width="1" fill="none"/>
-      <!-- ショーウィンドウ右 -->
-      <rect id="sf-wr" x="90" y="60" width="50" height="55" stroke="#0a0a0a" stroke-width="1" fill="none"/>
-      <!-- ドア -->
-      <rect id="sf-door" x="152" y="78" width="22" height="37" stroke="#0a0a0a" stroke-width="1" fill="none"/>
-      <!-- ドアノブ -->
-      <line id="sf-knob" x1="153" y1="97" x2="156" y2="97" stroke="#0a0a0a" stroke-width="1.2"/>
-      <!-- ウィンドウ内の本棚ライン（左） -->
-      <line id="sf-bl1" x1="30" y1="80" x2="76" y2="80" stroke="#0a0a0a" stroke-width="0.6"/>
-      <line id="sf-bl2" x1="30" y1="90" x2="76" y2="90" stroke="#0a0a0a" stroke-width="0.6"/>
-      <line id="sf-bl3" x1="30" y1="100" x2="76" y2="100" stroke="#0a0a0a" stroke-width="0.6"/>
-      <!-- ウィンドウ内の本棚ライン（右） -->
-      <line id="sf-br1" x1="92" y1="80" x2="138" y2="80" stroke="#0a0a0a" stroke-width="0.6"/>
-      <line id="sf-br2" x1="92" y1="90" x2="138" y2="90" stroke="#0a0a0a" stroke-width="0.6"/>
-      <line id="sf-br3" x1="92" y1="100" x2="138" y2="100" stroke="#0a0a0a" stroke-width="0.6"/>
+    <svg viewBox="0 0 300 160" preserveAspectRatio="xMidYMid meet" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- 水平線 -->
+      <line id="c-horizon" x1="0" y1="80" x2="300" y2="80" stroke="#0a0a0a" stroke-width="1.5"/>
+      <!-- 奥の波（細く・間隔狭く） -->
+      <path id="c-wave1" d="M0,88 Q15,85 30,88 Q45,91 60,88 Q75,85 90,88 Q105,91 120,88 Q135,85 150,88 Q165,91 180,88 Q195,85 210,88 Q225,91 240,88 Q255,85 270,88 Q285,91 300,88" stroke="#0a0a0a" stroke-width="0.6"/>
+      <path id="c-wave2" d="M0,93 Q15,90 30,93 Q45,96 60,93 Q75,90 90,93 Q105,96 120,93 Q135,90 150,93 Q165,96 180,93 Q195,90 210,93 Q225,96 240,93 Q255,90 270,93 Q285,96 300,93" stroke="#0a0a0a" stroke-width="0.6"/>
+      <!-- 中距離の波 -->
+      <path id="c-wave3" d="M0,102 Q20,97 40,102 Q60,107 80,102 Q100,97 120,102 Q140,107 160,102 Q180,97 200,102 Q220,107 240,102 Q260,97 280,102 Q290,104 300,102" stroke="#0a0a0a" stroke-width="0.9"/>
+      <path id="c-wave4" d="M0,110 Q20,105 40,110 Q60,115 80,110 Q100,105 120,110 Q140,115 160,110 Q180,105 200,110 Q220,115 240,110 Q260,105 280,110 Q290,112 300,110" stroke="#0a0a0a" stroke-width="0.9"/>
+      <!-- 手前の波（太く・振幅大きく） -->
+      <path id="c-wave5" d="M0,122 Q25,114 50,122 Q75,130 100,122 Q125,114 150,122 Q175,130 200,122 Q225,114 250,122 Q275,130 300,122" stroke="#0a0a0a" stroke-width="1.4"/>
+      <path id="c-wave6" d="M0,134 Q25,124 50,134 Q75,144 100,134 Q125,124 150,134 Q175,144 200,134 Q225,124 250,134 Q275,144 300,134" stroke="#0a0a0a" stroke-width="1.8"/>
+      <!-- 砂浜ライン -->
+      <path id="c-shore" d="M0,148 Q50,144 100,147 Q150,150 200,146 Q250,142 300,148" stroke="#0a0a0a" stroke-width="1.2"/>
+      <!-- 空：遠くの陸地シルエット -->
+      <path id="c-land" d="M0,80 Q40,72 80,75 Q120,78 160,70 Q200,62 240,68 Q270,73 300,80" stroke="#0a0a0a" stroke-width="1"/>
     </svg>
   </div>
   <nav class="nav">
@@ -443,20 +431,22 @@
     const drawing  = document.getElementById('code-drawing');
 
     const lines = [
-      { ln:'1',  kw:'const ', fn:'frame', rest:' = {' },
-      { ln:'2',  kw:'  ', fn:'', rest:'x: 2, y: 2,' },
-      { ln:'3',  kw:'  ', fn:'', rest:'w: 80, h: 50,' },
-      { ln:'4',  kw:'  ', fn:'', rest:'stroke: "#0a0a0a"' },
-      { ln:'5',  kw:'', fn:'', rest:'}' },
-      { ln:'6',  kw:'', fn:'', rest:'' },
-      { ln:'7',  kw:'function ', fn:'drawStripes', rest:'(n) {' },
-      { ln:'8',  kw:'  ', fn:'', rest:'// horizontal lines' },
-      { ln:'9',  kw:'  for ', fn:'', rest:'(let i = 0; i < n; i++) {' },
-      { ln:'10', kw:'    ', fn:'draw', rest:'(frame.x, 10 + i * 4)' },
-      { ln:'11', kw:'  ', fn:'', rest:'}' },
-      { ln:'12', kw:'', fn:'', rest:'}' },
-      { ln:'13', kw:'', fn:'', rest:'' },
-      { ln:'14', kw:'', fn:'drawStripes', rest:'(5)' },
+      { ln:'1',  kw:'const ', fn:'horizon', rest:' = 80' },
+      { ln:'2',  kw:'const ', fn:'waves',   rest:' = []' },
+      { ln:'3',  kw:'', fn:'', rest:'' },
+      { ln:'4',  kw:'function ', fn:'drawWave', rest:'(y, amp, sw) {' },
+      { ln:'5',  kw:'  ', fn:'', rest:'// sine curve across viewport' },
+      { ln:'6',  kw:'  ', fn:'', rest:'let d = `M0,${y}`' },
+      { ln:'7',  kw:'  for ', fn:'', rest:'(let x = 0; x < 300; x += 25) {' },
+      { ln:'8',  kw:'    ', fn:'', rest:'d += ` Q${x+12},${y-amp} ${x+25},${y}`' },
+      { ln:'9',  kw:'  ', fn:'', rest:'}' },
+      { ln:'10', kw:'  ', fn:'path', rest:'(d, { strokeWidth: sw })' },
+      { ln:'11', kw:'', fn:'', rest:'}' },
+      { ln:'12', kw:'', fn:'', rest:'' },
+      { ln:'13', kw:'// ', fn:'', rest:'render' },
+      { ln:'14', kw:'', fn:'drawWave', rest:'(102, 5, 0.9)' },
+      { ln:'15', kw:'', fn:'drawWave', rest:'(122, 8, 1.4)' },
+      { ln:'16', kw:'', fn:'drawWave', rest:'(134, 10, 1.8)' },
     ];
 
     logoImg.addEventListener('animationend', () => {
