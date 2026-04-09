@@ -253,26 +253,33 @@
       const birdW = 36;
       const birdH = 28;
 
-      // 画面上部から降りてくる開始位置
-      const startX = landX - birdW / 2 + 40; // 着地点より少し右から弧を描く
-      const startY = -wrapRect.top - birdH - 20; // 画面上端の外
+      // 開始位置：画面上部の真ん中（logo-wrap基準に変換）
+      const screenCenterX = window.innerWidth / 2 - wrapRect.left;
+      const startX = screenCenterX;
+      const startY = -wrapRect.top - birdH - 20;
+
+      // 着地点
+      const endX = landX - birdW / 2;
+      const endY = landY - birdH;
+
+      // 弧の制御点
+      const cpX = (startX + endX) / 2 + (endX - startX) * 0.3;
+      const cpY = (startY + endY) / 2 - 80;
 
       birdWrap.style.left = startX + 'px';
       birdWrap.style.top  = startY + 'px';
       birdWrap.style.opacity = '1';
 
-      // 飛行フェーズ：上外→着地点
-      const duration = 3200; // ms（ゆっくり）
+      // 飛行フェーズ：二次ベジェ曲線
+      const duration = 3200;
       const startTime = performance.now();
 
       function flyTo(now) {
         const t = Math.min((now - startTime) / duration, 1);
-        // イーズアウト（終盤ゆっくり）
         const ease = 1 - Math.pow(1 - t, 2.5);
-        // 横は緩やかな弧
-        const x = startX + (landX - birdW / 2 - startX) * ease;
-        // 縦は上から降りてくる
-        const y = startY + (landY - birdH - startY) * ease + Math.sin(Math.PI * t * 0.8) * 20;
+        const e = ease;
+        const x = Math.pow(1-e,2)*startX + 2*(1-e)*e*cpX + Math.pow(e,2)*endX;
+        const y = Math.pow(1-e,2)*startY + 2*(1-e)*e*cpY + Math.pow(e,2)*endY;
         birdWrap.style.left = x + 'px';
         birdWrap.style.top  = y + 'px';
 
