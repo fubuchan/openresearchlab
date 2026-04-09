@@ -16,7 +16,7 @@
 
   html, body {
     width: 100%; height: 100%;
-    overflow: hidden;
+    overflow-x: hidden;
     background: var(--white);
     font-family: 'Share Tech Mono', monospace;
   }
@@ -81,7 +81,7 @@
     position: relative;
     flex-shrink: 0;
     margin-right: min(-4vw, -40px);
-    margin-top: 15vh;
+    margin-top: 35vh;
   }
   #lp-sign .logo-img {
     margin-right: 0;
@@ -172,9 +172,108 @@
   }
   #lp-code .meta-top { top:44px; right:44px; text-align:right; }
   #lp-code .meta-bot { bottom:44px; right:44px; text-align:right; }
+
+  /* スクロールヒント */
+  .scroll-hint {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    color: var(--black);
+    opacity: 0;
+    text-transform: uppercase;
+    pointer-events: none;
+    animation: hintPulse 2s ease-in-out 2s infinite;
+  }
+  @keyframes hintPulse {
+    0%,100% { opacity: 0; transform: translateX(-50%) translateY(0); }
+    50%      { opacity: 0.3; transform: translateX(-50%) translateY(-4px); }
+  }
+
+  /* ステートメントセクション */
+  #statement {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 48px;
+  }
+
+  .statement-inner {
+    max-width: 560px;
+    width: 100%;
+  }
+
+  .statement-label {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--black);
+    opacity: 0.4;
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+
+  .statement-title {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(18px, 2.2vw, 26px);
+    color: var(--black);
+    line-height: 1.5;
+    margin-bottom: 40px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+  }
+
+  .statement-body {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(12px, 1.1vw, 14px);
+    color: var(--black);
+    line-height: 2;
+    opacity: 0.75;
+    margin-bottom: 32px;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+  }
+
+  .statement-close {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: clamp(14px, 1.4vw, 18px);
+    color: var(--black);
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.8s ease 0.4s, transform 0.8s ease 0.4s;
+  }
+
+  /* 見えたらフェードイン */
+  .statement-inner.visible .statement-label,
+  .statement-inner.visible .statement-title,
+  .statement-inner.visible .statement-body,
+  .statement-inner.visible .statement-close {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .statement-inner.visible .statement-label { opacity: 0.4; }
+  .statement-inner.visible .statement-body  { opacity: 0.75; }
+
 </style>
 </head>
 <body>
+
+<!-- スクロールコンテナ -->
+<div id="scroll-container" style="height:100vh; overflow-y:scroll; overflow-x:hidden; scroll-snap-type: y mandatory;">
+
+<!-- ファーストビュー（100vh） -->
+<div id="firstview" style="height:100vh; position:relative; scroll-snap-align:start;">
 
 <!-- ① 看板 -->
 <div class="lp" id="lp-sign">
@@ -223,6 +322,30 @@
   <div class="meta meta-top">$ open research_lab --mode=public<span class="cursor"></span></div>
   <div class="meta meta-bot">Process · Publication · Platform</div>
 </div>
+<!-- /firstview -->
+
+<div class="scroll-hint">↓ scroll</div>
+
+<!-- ステートメントセクション -->
+<div id="statement" style="scroll-snap-align:start;">
+  <div class="statement-inner">
+    <div class="statement-label">Open Research Lab. の目的</div>
+    <div class="statement-title">学術研究を、ひらかれたものに。</div>
+    <div class="statement-body">
+      わたしたちは普段、大学で研究をしている学生です。<br><br>
+      1〜2年を費やす研究プロセス。たくさんの人に会い、話を聞き、データと向き合い、<br>
+      時には「本当にこの論文が役に立つのだろうか」と悩んだりもします。<br>
+      だからこそ、必死に完成させた論文が研究室の片隅に並べられてるのは少し悲しかったりもします。<br>
+      研究はもっと、「ひらかれたもの」であるべきではないでしょうか。<br><br>
+      そこで、学術研究を手に取りたくなるようなお店を作りました。<br><br>
+      私たち、研究者の想いが届くように。<br>
+      世界のどこかで、私たちの研究がちょっとでも役に立つように。
+    </div>
+    <div class="statement-close">We are "Open".</div>
+  </div>
+</div>
+
+</div><!-- /scroll-container -->
 
 <script>
   // ランダムLP選択
@@ -308,6 +431,17 @@
       requestAnimationFrame(flyTo);
     }, { once: true });
   }
+
+  // ステートメントのフェードイン
+  const statementInner = document.querySelector('.statement-inner');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        statementInner.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.2 });
+  observer.observe(statementInner);
 </script>
 </body>
 </html>
