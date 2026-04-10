@@ -47,7 +47,7 @@
 
   /* ===== ② 本 ===== */
   #lp-book{display:flex;align-items:flex-start;justify-content:center;}
-  #lp-book .book-wrap{position:relative;flex-shrink:0;margin-top:35vh;}
+  #lp-book .book-wrap{position:relative;flex-shrink:0;margin-top:22vh;}
   #lp-book .logo-img{display:block;}
   #lp-book.active .logo-img{animation:fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;}
   @keyframes fromBelow{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
@@ -181,7 +181,7 @@
         logoImg.addEventListener('animationend', () => {
       // ===== 鳥の着地位置を数値で直接指定 =====
       const LAND_X = 100;  // logo-wrap左端からのpx（右に増やす）
-      const LAND_Y = 165;   // logo-wrap上端からのpx（下に増やす）
+      const LAND_Y = 162;   // logo-wrap上端からのpx（下に増やす）
       // =========================================
       const birdW = 56, birdH = 44;
       const wrapRect = logoImg.closest('.logo-wrap').getBoundingClientRect();
