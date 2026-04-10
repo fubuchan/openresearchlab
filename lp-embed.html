@@ -182,7 +182,7 @@
       const logoRect = logoImg.getBoundingClientRect();
       const wrapRect = logoImg.closest('.logo-wrap').getBoundingClientRect();
       const landX = (logoRect.right - wrapRect.left) * 0.25;
-      const landY = logoRect.top - wrapRect.top;
+      const landY = logoRect.bottom - wrapRect.top - birdH - 10; 
       const birdW=56, birdH=44;
       const startX = window.innerWidth/2 - wrapRect.left;
       const startY = -wrapRect.top - birdH - 20;
