@@ -62,11 +62,13 @@
 
   /* ロゴ：左端44px、上から25vh */
   #lp-code .logo-img{
-    position:absolute;
-    left:var(--left);
-    top:25vh;
-    width:min(48vw,550px);
+    position:absolute !important;
+    left:var(--left) !important;
+    top:0vh !important;
+    width:min(48vw,520px) !important;
     opacity:0;
+    flex-shrink:unset;
+    display:block;
   }
   #lp-code.active .logo-img{animation:fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;}
   @keyframes fromLeft{from{opacity:0;transform:translateX(-40px);}to{opacity:1;transform:translateX(0);}}
@@ -78,7 +80,7 @@
   #code-editor{
     position:absolute;
     left:var(--left);
-    top:calc(25vh + var(--logo-h, 120px) + 18px);
+    top:calc(5vh + var(--logo-h, 120px) + 18px);
     width:min(48vw,520px);
     font-family:'Share Tech Mono',monospace;
     font-size:clamp(9px,1vw,12px);
