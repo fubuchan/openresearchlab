@@ -62,7 +62,7 @@
   #lp-code{display:flex;align-items:flex-start;justify-content:flex-start;}
 
   #lp-code .logo-img{
-    margin-left:min(-4vw,-40px);  /* 左にはみ出す量 */
+    margin-left:min(-4vw,-38px);  /* 左にはみ出す量 */
     margin-top:2vh;               /* ← 縦位置はここで調整 */
     width:min(48vw,520px);
     display:block;
@@ -77,8 +77,8 @@
   /* コードエディタ：ロゴ直下に重ねる（absoluteで独立配置） */
   #code-editor{
     position:absolute;
-    left:44px;                     /* ← 左端位置 */
-    top:calc(-10vh + var(--logo-h, 120px) + 18px); /* ← margin-topと同じvh値に揃える */
+    left:43px;                     /* ← 左端位置 */
+    top:calc(-18vh + var(--logo-h, 120px) + 18px); /* ← margin-topと同じvh値に揃える */
     width:min(48vw,520px);
     font-family:'Share Tech Mono',monospace;
     font-size:clamp(9px,1vw,12px);
