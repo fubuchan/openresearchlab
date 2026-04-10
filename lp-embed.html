@@ -58,17 +58,15 @@
   @keyframes sway{0%{transform:rotate(0deg);}25%{transform:rotate(3deg);}50%{transform:rotate(0deg);}75%{transform:rotate(-3deg);}100%{transform:rotate(0deg);}}
 
   /* ===== ③ コード ===== */
-  #lp-code{position:absolute;inset:0;}
+  /* lp-sign/lp-bookと同じflex構造。margin-topでロゴの縦位置を調整 */
+  #lp-code{display:flex;align-items:flex-start;justify-content:flex-start;}
 
-  /* ロゴ：左端44px、上から25vh */
   #lp-code .logo-img{
-    position:absolute !important;
-    left:var(--left) !important;
-    top:0vh !important;
-    width:min(48vw,520px) !important;
-    opacity:0;
-    flex-shrink:unset;
+    margin-left:min(-4vw,-40px);  /* 左にはみ出す量 */
+    margin-top:35vh;               /* ← 縦位置はここで調整 */
+    width:min(48vw,520px);
     display:block;
+    opacity:0;
   }
   #lp-code.active .logo-img{animation:fromLeft 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;}
   @keyframes fromLeft{from{opacity:0;transform:translateX(-40px);}to{opacity:1;transform:translateX(0);}}
@@ -76,11 +74,11 @@
   /* メタ：右上 */
   #lp-code .meta-top{top:44px;right:44px;text-align:right;}
 
-  /* コードエディタ：ロゴと同じ左端、ロゴ直下 */
+  /* コードエディタ：ロゴ直下に重ねる（absoluteで独立配置） */
   #code-editor{
     position:absolute;
-    left:var(--left);
-    top:calc(5vh + var(--logo-h, 120px) + 18px);
+    left:80px;                     /* ← 左端位置 */
+    top:calc(5vh + var(--logo-h, 120px) + 18px); /* ← margin-topと同じvh値に揃える */
     width:min(48vw,520px);
     font-family:'Share Tech Mono',monospace;
     font-size:clamp(9px,1vw,12px);
