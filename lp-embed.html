@@ -184,12 +184,8 @@
   const birdW = 56, birdH = 44;
 
   // 全部 wrapRect 基準に統一
-  const BIRD_X = 0.25;  // ロゴ横幅の何割の位置か（0=左端, 1=右端）
-const BIRD_Y = 80;    // logoWrap上端からのpx（増やすと下、減らすと上）
-// ======================================
-
-const landX = logoOffsetLeft + logoW * BIRD_X - birdW / 2;
-const landY = BIRD_Y;
+  const landX = (logoRect.right - wrapRect.left) * 0.25 - birdW / 2;
+  const landY = (logoRect.bottom - wrapRect.top) - birdH;  // ロゴ下端に乗る
 
   const startX = window.innerWidth / 2 - wrapRect.left;
   const startY = -wrapRect.top - birdH ;
