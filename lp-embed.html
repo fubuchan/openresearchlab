@@ -215,11 +215,16 @@
   if (chosen === 'lp-book') {
     const bookLogo = document.getElementById('book-logo');
     const bookWrap = document.querySelector('#lp-book .book-wrap');
-    bookLogo.addEventListener('animationend', () => {
-      const logoH = bookLogo.offsetHeight;
+     bookLogo.addEventListener('animationend', () => {
+      // ===== 栞の位置（book-wrap左上基準のpx） =====
+      const BM_X = 220;    // 右に増やす
+      const BM_Y = -18;    // 上にはみ出す（マイナスでロゴより上）
+      const BM_H = 80;     // リボンの長さ（px）
+      // =============================================
       const bm = document.createElement('div'); bm.id='bookmark';
-      const rb = document.createElement('div'); rb.id='bookmark-ribbon'; rb.style.height=(logoH*0.42)+'px';
+      const rb = document.createElement('div'); rb.id='bookmark-ribbon'; rb.style.height=BM_H+'px';
       const tl = document.createElement('div'); tl.id='bookmark-tail';
+      bm.style.left=BM_X+'px'; bm.style.top=BM_Y+'px';
       bm.appendChild(rb); bm.appendChild(tl); bookWrap.appendChild(bm);
       setTimeout(()=>{bm.style.transition='opacity 0.6s ease';bm.style.opacity='1';},200);
       setTimeout(()=>{bm.style.animation='sway 3s ease-in-out infinite';},900);
