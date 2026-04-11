@@ -1,9 +1,10 @@
-<!DOCTYPE html>
-<html lang="ja">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Open Research Lab.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -353,10 +354,18 @@
         path.lineTo(revealX, H);
         path.closePath();
 
+        // ← ここだけ変更：fillとclipを分ける
         ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(0, H);
+        for (let x=0; x<=revealX; x++) {
+          ctx.lineTo(x, getSurfaceY(layer, x, time));
+        }
+        ctx.lineTo(revealX, H);
+        ctx.closePath();
         ctx.fillStyle = layer.fillColor;
-        ctx.fill(path);
-        ctx.clip(path);
+        ctx.fill();
+        ctx.clip();
         for (let lineY=layer.lineSpacing; lineY<H; lineY+=layer.lineSpacing) {
           ctx.beginPath();
           for (let x=0; x<=revealX; x++) {
