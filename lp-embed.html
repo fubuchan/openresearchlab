@@ -6,8 +6,7 @@
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
   :root{--black:#0a0a0a;--white:#f5f5f2;--left:44px;}
-  html,body{width:100%;height:100%;overflow:hidden;background:var(--white);font-family:'Share Tech Mono',monospace;}
-
+  html,body{width:100%;height:100%;overflow:hidden;background:var(--white);font-family:'Share Tech Mono',ui-monospace,monospace;}
   .lp{position:absolute;inset:0;opacity:0;pointer-events:none;}
   .lp.active{opacity:1;pointer-events:all;}
 
@@ -343,19 +342,10 @@
       let t = 0;
 
       function drawLayer(layer, revealX, time) {
-        const path = new Path2D();
-        path.moveTo(0, H);
-        for (let x=0; x<=revealX; x++) {
-          path.lineTo(x, getSurfaceY(layer, x, time));
-        }
-        path.lineTo(revealX, H);
-        path.closePath();
-
-        // ← ここだけ変更：fillとclipを分ける
         ctx.save();
         ctx.beginPath();
         ctx.moveTo(0, H);
-        for (let x=0; x<=revealX; x++) {
+        for (let x = 0; x <= revealX; x++) {
           ctx.lineTo(x, getSurfaceY(layer, x, time));
         }
         ctx.lineTo(revealX, H);
@@ -363,11 +353,11 @@
         ctx.fillStyle = layer.fillColor;
         ctx.fill();
         ctx.clip();
-        for (let lineY=layer.lineSpacing; lineY<H; lineY+=layer.lineSpacing) {
+        for (let lineY = layer.lineSpacing; lineY < H; lineY += layer.lineSpacing) {
           ctx.beginPath();
-          for (let x=0; x<=revealX; x++) {
-            const wy = lineY + Math.sin(layer.lineFreq*x + time*0.9)*layer.lineAmp;
-            x===0 ? ctx.moveTo(x,wy) : ctx.lineTo(x,wy);
+          for (let x = 0; x <= revealX; x++) {
+            const wy = lineY + Math.sin(layer.lineFreq * x + time * 0.9) * layer.lineAmp;
+            x === 0 ? ctx.moveTo(x, wy) : ctx.lineTo(x, wy);
           }
           ctx.strokeStyle = layer.lineColor;
           ctx.lineWidth = 1.1;
