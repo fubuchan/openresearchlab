@@ -303,24 +303,18 @@
       setTimeout(typeLine, 300);
     }, {once:true});
 
-    function startWave() {
-  const waveCanvas = document.getElementById('wave-canvas');
-  if (!waveCanvas) return;
-  console.log('W:', waveCanvas.offsetWidth, 'H:', waveCanvas.offsetHeight);
-  if (waveCanvas.offsetWidth === 0) {
-    setTimeout(startWave, 100);
-    return;
-  }
-  }
+   function startWave() {
+      const waveCanvas = document.getElementById('wave-canvas');
+      if (!waveCanvas) { setTimeout(startWave, 100); return; }
       const W = waveCanvas.offsetWidth;
       const H = waveCanvas.offsetHeight;
+      if (W === 0 || H === 0) { setTimeout(startWave, 100); return; }
       waveCanvas.width  = W * devicePixelRatio;
       waveCanvas.height = H * devicePixelRatio;
       waveCanvas.style.width  = W + 'px';
       waveCanvas.style.height = H + 'px';
       const ctx = waveCanvas.getContext('2d');
       ctx.scale(devicePixelRatio, devicePixelRatio);
-
       const layers = [
         {
           fillColor:'#282422', lineColor:'#484240',
@@ -337,19 +331,16 @@
           lineSpacing:13, lineAmp:5, lineFreq:2*Math.PI/80,
         },
       ];
-
       function getSurfaceY(layer, x, time) {
         return layer.baseY
           + Math.sin(layer.floatSpeed*time + layer.floatPhase)*layer.floatAmp
           + Math.sin(layer.freq*x + layer.phase + time*0.5)*layer.amp;
       }
-
       let revealProgress = 0;
       const revealDur = 1800;
       const revealStart = performance.now();
       let revealed = false;
       let t = 0;
-
       function drawLayer(layer, revealX, time) {
         ctx.save();
         ctx.beginPath();
@@ -374,7 +365,6 @@
         }
         ctx.restore();
       }
-
       function render(now) {
         ctx.clearRect(0,0,W,H);
         if (!revealed) {
