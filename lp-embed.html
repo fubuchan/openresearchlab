@@ -47,7 +47,7 @@
 
   /* ===== ② 本 ===== */
   #lp-book{display:flex;align-items:flex-start;justify-content:center;}
-  #lp-book .book-wrap{position:relative;flex-shrink:0;margin-top:18vh;}
+  #lp-book .book-wrap{position:relative;flex-shrink:0;margin-top:20vh;}
   #lp-book .logo-img{display:block;}
   #lp-book.active .logo-img{animation:fromBelow 0.9s cubic-bezier(0.16,1,0.3,1) 0.05s forwards;}
   @keyframes fromBelow{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
@@ -218,7 +218,7 @@
      bookLogo.addEventListener('animationend', () => {
       // ===== 栞の位置（book-wrap左上基準のpx） =====
       const BM_X = -150;    // 右に増やす
-      const BM_Y = 100;    // 上にはみ出す（マイナスでロゴより上）
+      const BM_Y = 180;    // 上にはみ出す（マイナスでロゴより上）
       const BM_H = 80;     // リボンの長さ（px）
       // =============================================
       const bm = document.createElement('div'); bm.id='bookmark';
