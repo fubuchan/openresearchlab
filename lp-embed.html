@@ -303,6 +303,11 @@
     }, {once:true});
 
     function startWave() {
+  console.log('W:', waveCanvas.offsetWidth, 'H:', waveCanvas.offsetHeight);
+  if (waveCanvas.offsetWidth === 0) {
+    setTimeout(startWave, 100);
+    return;
+  }
       const W = waveCanvas.offsetWidth;
       const H = waveCanvas.offsetHeight;
       waveCanvas.width  = W * devicePixelRatio;
