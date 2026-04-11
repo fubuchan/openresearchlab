@@ -2,9 +2,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Open Research Lab.</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
@@ -236,7 +233,7 @@
   if (chosen === 'lp-code') {
     const logoImg = document.getElementById('code-logo');
     const editor  = document.getElementById('code-editor');
-    const canvas  = document.getElementById('wave-canvas');
+    const waveCanvas = document.getElementById('wave-canvas');
 
     const codeLines = [
       {ln:'1',  kw:'const ', fn:'wave', rest:' = (x, t) =>'},
@@ -307,13 +304,13 @@
     }, {once:true});
 
     function startWave() {
-      const W = canvas.offsetWidth;
-      const H = canvas.offsetHeight;
-      canvas.width  = W * devicePixelRatio;
-      canvas.height = H * devicePixelRatio;
-      canvas.style.width  = W + 'px';
-      canvas.style.height = H + 'px';
-      const ctx = canvas.getContext('2d');
+      const W = waveCanvas.offsetWidth;
+      const H = waveCanvas.offsetHeight;
+      waveCanvas.width  = W * devicePixelRatio;
+      waveCanvas.height = H * devicePixelRatio;
+      waveCanvas.style.width  = W + 'px';
+      waveCanvas.style.height = H + 'px';
+      const ctx = waveCanvas.getContext('2d');
       ctx.scale(devicePixelRatio, devicePixelRatio);
 
       const layers = [
